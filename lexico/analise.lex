@@ -1,5 +1,8 @@
 %{
+
 #include <stdio.h>
+#include "funcoes.h"
+
 %}
 
 /* TIPOS */
@@ -11,7 +14,9 @@ struct						"struct"
 tipo						{int}|{float}|{char}|{void}|{struct}
 
 /* COMENTARIOS */
-
+abre_comentario				"/*"
+fecha_comentario			"*/"
+comentario					{abre_comentario}[^\*\/]*{fecha_comentario}
 
 
 /* PALAVRAS RESERVADAS */
@@ -32,8 +37,8 @@ div							"/"
 atribuicao 					"="
 
 /* VALORES */
-num_int						{digitos}(e(\+)?{digitos})?
-num 						(\+|\-)?{digitos}{ponto}{digitos}((e(\+|\-)?){digitos})?
+num_int						{digitos}
+num 						(\+|\-)?{digitos}({ponto}{digitos})?((e(\+|\-)?){digitos})?
 
 /* ENCAPSULADORES */
 abre_chave					"{"
@@ -58,6 +63,7 @@ ident						{letra}({letra}|{digito})*
 espaco						" "
 tabulacao					"\t"
 quebra_linha				"\n"
+ws							({espaco}|{tabulacao})+
 
 /* DELIMITADORES */
 
@@ -73,7 +79,9 @@ outros 						.
 
 %%
 
-{comentario}				{ printf("<COMENTARIO, %s>", yytext); }
+{quebra_linha}				{ ; }
+{ws}						{ ; }
+{comentario}				{ printf("COMENTARIO   "); }
 {tipo}						{ printf("<TIPO, %s>", yytext); }
 {palavra_reservada}			{ printf("<PALAVRA_RESERVADA, %s>", yytext); }
 {ident}						{ printf("<IDENT, %s>", yytext); }
@@ -81,22 +89,27 @@ outros 						.
 {atribuicao}				{ printf("<ATRIBUICAO, %s>", yytext); }
 {soma}						{ printf("<SOMA, %s>", yytext); }
 {mult}						{ printf("<MULT, %s>", yytext); }
-{num}						{ printf("<NUM, %f>", atof(yytext)); }
 {num_int}					{ printf("<NUM_INT, %d>", atoi(yytext)); }
+{num}						{ printf("<NUM, %f>", atof(yytext)); }
 {ponto_virgula}				{ printf("<PONTO_VIRGULA, %s>", yytext); }
-
-
+{outros}					{ printf("ERRO: %s", yytext); }
 
 %%
+
+int main(int argc, char **argv) {
+	yyin = fopen(argv[1], "r");
+	return 0;
+}
+
 int yywrap() {
     return 0;
 }
 
 /*
 	DUVIDAS:
-	Numero inteiro pode ser negativo?
-	Ponto e virgula depois de tipo?
-	Atributos-declaracao
+	### Numero inteiro pode ser negativo?
+	### Ponto e virgula depois de tipo?
+	### (SINTATICA) Atributos-declaracao
 
 	Erros a tratar:
 
@@ -109,4 +122,13 @@ int yywrap() {
 	- Hexadecimal
 	- Octal
 	- Binario
+
+	Comentario precisa ser ignorado (não precisa ter um token COMENTARIO)
+	LEX precisa identificar erros.
+
+	Usar ponto e virgula é um TOKEN.
+
+	Dar print no nome dos tokens (linha a linha)
+
+	ERRO: Exibir mensagem bonitinha pro usuário
 */
