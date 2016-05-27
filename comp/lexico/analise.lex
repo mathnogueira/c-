@@ -1,7 +1,7 @@
 %{
 
 #include <stdio.h>
-#include "funcoes.h"
+#include <lexico/funcoes.h>
 
 %}
 
@@ -67,6 +67,7 @@ quebra_linha				[\n]
 ws							({espaco}|{tabulacao}|\r)+
 
 /* DELIMITADORES */
+eof 						<<EOF>>
 
 /* ERRO */
 
@@ -80,9 +81,10 @@ outros 						.
 
 %%
 
+
+{quebra_linha}				{ linha++; coluna = 1;}
+{ws}						{ /* sem acao */ }
 {comentario}				{ ignorar_comentario(yytext, yyleng); }
-\n							{ linha++; coluna = 1; }
-{ws}						{ erro("oi"); coluna += yyleng; }
 {tipo}						{ printf("<TIPO, %s>", yytext); coluna += yyleng; }
 {palavra_reservada}			{ printf("<PALAVRA_RESERVADA, %s>", yytext); coluna += yyleng; }
 {ident}						{ printf("<IDENT, %s>", yytext); coluna += yyleng; }
@@ -93,13 +95,19 @@ outros 						.
 {num_int}					{ printf("<NUM_INT, %d>", atoi(yytext)); coluna += yyleng; }
 {num}						{ printf("<NUM, %f>", atof(yytext)); coluna += yyleng; }
 {ponto_virgula}				{ printf("<PONTO_VIRGULA, %s>", yytext); coluna += yyleng; }
+{abre_chave}				{}
+{fecha_chave}				{}
+{abre_parenteses} 			{}
+{virgula}					{}
+{fecha_parenteses}			{}
+
 
 
 %%
 
 int main(int argc, char *argv[]) {
 	inicializa();
-	yyin = fopen("a.txt", "r");
+	yyin = fopen(argv[1], "r");
 	yyout = stdout;
 	yylex();
 	fclose(yyin);
@@ -107,7 +115,7 @@ int main(int argc, char *argv[]) {
 }
 
 int yywrap() {
-    return 0;
+    return 1;
 }
 
 /*
