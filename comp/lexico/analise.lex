@@ -16,7 +16,7 @@ tipo						{int}|{float}|{char}|{void}|{struct}
 /* COMENTARIOS */
 abre_comentario				"/*"
 fecha_comentario			"*/"
-caracteres_especiais 		{soma}|{sub}|{mult}|{div}|{atribuicao}|\n
+caracteres_especiais 		{soma}|{sub}|{mult}|{div}|{atribuicao}
 comentario					{abre_comentario}([^(*/)]|{caracteres_especiais})*{fecha_comentario}
 
 
