@@ -9,8 +9,8 @@
  * de armazenar qualquer tipo de dados.
  *
  * \author Matheus Henrique Nogueira de Paula
- * \author Rhyad Kryn Shamaon Janse
  * \author Victor Grudtner Boell
+ * \author Wilson Camilo Costa
  */
 
 /* Foward declaration do nó. */
