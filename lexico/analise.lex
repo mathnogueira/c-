@@ -16,7 +16,8 @@ tipo						{int}|{float}|{char}|{void}|{struct}
 /* COMENTARIOS */
 abre_comentario				"/*"
 fecha_comentario			"*/"
-comentario					{abre_comentario}[^\*\/]*{fecha_comentario}
+caracteres_especiais 		{soma}|{sub}|{mult}|{div}|{atribuicao}|\n
+comentario					{abre_comentario}([^(*/)]|{caracteres_especiais})*{fecha_comentario}
 
 
 /* PALAVRAS RESERVADAS */
@@ -24,7 +25,7 @@ if							"if"
 else						"else"
 while						"while"
 return						"return"
-palavra_reservada			{int}|{float}|{void}|{struct}|{if}|{else}|{while}|{return}
+palavra_reservada			{if}|{else}|{while}|{return}
 
 /* OPERADORES RELACIONAIS */
 relacional					"<="|"<"|">"|">="|"=="|"!="
@@ -60,10 +61,10 @@ palavra						{letra}+
 ident						{letra}({letra}|{digito})*
 
 /* CARACTERES EM BRANCO */
-espaco						" "
-tabulacao					"\t"
-quebra_linha				"\n"
-ws							({espaco}|{tabulacao})+
+espaco						[ ]
+tabulacao					\t
+quebra_linha				[\n]
+ws							({espaco}|{tabulacao}|\r)+
 
 /* DELIMITADORES */
 
@@ -79,25 +80,29 @@ outros 						.
 
 %%
 
-{quebra_linha}				{ ; }
-{ws}						{ ; }
-{comentario}				{ printf("COMENTARIO   "); }
-{tipo}						{ printf("<TIPO, %s>", yytext); }
-{palavra_reservada}			{ printf("<PALAVRA_RESERVADA, %s>", yytext); }
-{ident}						{ printf("<IDENT, %s>", yytext); }
-{relacional}				{ printf("<RELOP, %s>", yytext); }
-{atribuicao}				{ printf("<ATRIBUICAO, %s>", yytext); }
-{soma}						{ printf("<SOMA, %s>", yytext); }
-{mult}						{ printf("<MULT, %s>", yytext); }
-{num_int}					{ printf("<NUM_INT, %d>", atoi(yytext)); }
-{num}						{ printf("<NUM, %f>", atof(yytext)); }
-{ponto_virgula}				{ printf("<PONTO_VIRGULA, %s>", yytext); }
-{outros}					{ printf("ERRO: %s", yytext); }
+{comentario}				{ ignorar_comentario(yytext, yyleng); }
+\n							{ linha++; coluna = 1; }
+{ws}						{ erro("oi"); coluna += yyleng; }
+{tipo}						{ printf("<TIPO, %s>", yytext); coluna += yyleng; }
+{palavra_reservada}			{ printf("<PALAVRA_RESERVADA, %s>", yytext); coluna += yyleng; }
+{ident}						{ printf("<IDENT, %s>", yytext); coluna += yyleng; }
+{relacional}				{ printf("<RELOP, %s>", yytext); coluna += yyleng; }
+{atribuicao}				{ printf("<ATRIBUICAO, %s>", yytext); coluna += yyleng; }
+{soma}						{ printf("<SOMA, %s>", yytext); coluna += yyleng; }
+{mult}						{ printf("<MULT, %s>", yytext); coluna += yyleng; }
+{num_int}					{ printf("<NUM_INT, %d>", atoi(yytext)); coluna += yyleng; }
+{num}						{ printf("<NUM, %f>", atof(yytext)); coluna += yyleng; }
+{ponto_virgula}				{ printf("<PONTO_VIRGULA, %s>", yytext); coluna += yyleng; }
+
 
 %%
 
-int main(int argc, char **argv) {
-	yyin = fopen(argv[1], "r");
+int main(int argc, char *argv[]) {
+	inicializa();
+	yyin = fopen("a.txt", "r");
+	yyout = stdout;
+	yylex();
+	fclose(yyin);
 	return 0;
 }
 
