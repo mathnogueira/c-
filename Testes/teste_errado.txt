@@ -1,0 +1,32 @@
+int &fatorial(int num){
+	/* Funcao que calcula o fatorial de um */ numero */
+	if (num == 0) then{
+		return 1;
+	} else {
+		if ($num == 1) then{
+			retuurn 1;
+		} else {
+			return $num * $fatorial($num -* 1);
+		}
+	}
+}
+
+/*******************************************************/
+/*                                                     */
+/*                PROGRAMA PRINCIPAL                   */
+/*                                                     */
+/*******************************************************/
+
+void main(){
+	
+	^char vetor[3];
+
+	int Resultado, $num = 4;
+	float 5numreal;
+	
+	numreal = 1.2E;
+	
+	Resultado = fatorial(*num);
+
+	return 0;
+}
