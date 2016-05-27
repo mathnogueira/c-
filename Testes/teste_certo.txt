@@ -1,0 +1,35 @@
+int fatorial(int num){
+	/* Funcao que calcula o fatorial de um numero */
+	if (num == 0) {
+		return 1;
+	} else {
+		if (num == 1) {
+			return 1;
+		} else {
+			return (num * fatorial(num - 1));
+		}
+	}
+}
+
+/*******************************************************/
+/*                                                     */
+/*                PROGRAMA PRINCIPAL                   */
+/*                                                     */
+/*******************************************************/
+
+
+int main(){
+
+	/* variavel para teste */
+	float numreal;
+	numreal = 1.2;
+
+	/* variavel para calcular o fatorial */	
+	int resultado;
+	int num = 4;	
+	
+	
+	/* chamada para a funcao fatorial */
+	resultado = fatorial(num);
+	return 0;
+}
