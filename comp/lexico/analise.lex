@@ -54,6 +54,8 @@ letra						[a-z]
 digito						[0-9]
 digitos						{digito}+
 palavra						{letra}+
+binario 					[0-1]
+hexa 						[0-9a-fA-F]
 
 /* EXPRESSOES */
 
@@ -70,6 +72,12 @@ ws							({espaco}|{tabulacao}|\r)+
 eof 						<<EOF>>
 
 /* ERRO */
+erro_variavel_numero		{digito}+({letra}|{digito})*
+erro_variavel_upcase		[A-Z]*({letra}|{digito})*[A-Z]+({letra}|{digito})*
+erro_simbolo_invalido		"$"|"&"|"^"
+erro_token_invalido			"+="|"-="|"*="|"/="
+erro_real_invalido 			(\+|\-)?{digitos}({ponto}{digitos})?((e(\+|\-)?))?
+erro_tipo_numerico			("0x"{hexa}+)|("0b"{binario}+)
 
 /* DELIMITADORES */
 ponto 						"."
@@ -83,23 +91,34 @@ outros 						.
 
 
 {quebra_linha}				{ linha++; coluna = 1;}
-{ws}						{ /* sem acao */ }
+{ws}						{ coluna += yyleng; }
 {comentario}				{ ignorar_comentario(yytext, yyleng); }
-{tipo}						{ printf("<TIPO, %s>", yytext); coluna += yyleng; }
-{palavra_reservada}			{ printf("<PALAVRA_RESERVADA, %s>", yytext); coluna += yyleng; }
-{ident}						{ printf("<IDENT, %s>", yytext); coluna += yyleng; }
-{relacional}				{ printf("<RELOP, %s>", yytext); coluna += yyleng; }
-{atribuicao}				{ printf("<ATRIBUICAO, %s>", yytext); coluna += yyleng; }
-{soma}						{ printf("<SOMA, %s>", yytext); coluna += yyleng; }
-{mult}						{ printf("<MULT, %s>", yytext); coluna += yyleng; }
-{num_int}					{ printf("<NUM_INT, %d>", atoi(yytext)); coluna += yyleng; }
-{num}						{ printf("<NUM, %f>", atof(yytext)); coluna += yyleng; }
-{ponto_virgula}				{ printf("<PONTO_VIRGULA, %s>", yytext); coluna += yyleng; }
-{abre_chave}				{}
-{fecha_chave}				{}
-{abre_parenteses} 			{}
-{virgula}					{}
-{fecha_parenteses}			{}
+{tipo}						{ DEBUG("<TIPO, %s>\n", yytext); coluna += yyleng; }
+{palavra_reservada}			{ DEBUG("<PALAVRA_RESERVADA, %s>\n", yytext); coluna += yyleng; }
+{ident}						{ DEBUG("<IDENT, %s>\n", yytext); coluna += yyleng; }
+{relacional}				{ DEBUG("<RELOP, %s>\n", yytext); coluna += yyleng; }
+{atribuicao}				{ DEBUG("<ATRIBUICAO, %s>\n", yytext); coluna += yyleng; }
+{soma}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; }
+{sub}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; }
+{mult}						{ DEBUG("<MULT, %s>\n", yytext); coluna += yyleng; }
+{div}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; }
+{num_int}					{ DEBUG("<NUM_INT, %d>\n", atoi(yytext)); coluna += yyleng; }
+{num}						{ DEBUG("<NUM, %f>\n", atof(yytext)); coluna += yyleng; }
+{ponto_virgula}				{ DEBUG("<PONTO_VIRGULA, %s>\n", yytext); coluna += yyleng; }
+{abre_chave}				{ coluna += yyleng; }
+{fecha_chave}				{ coluna += yyleng; }
+{abre_parenteses} 			{ coluna += yyleng; }
+{fecha_parenteses}			{ coluna += yyleng; }
+{abre_colchete}				{ coluna += yyleng; }
+{fecha_colchete}			{ coluna += yyleng; }
+{virgula}					{ coluna += yyleng; }
+{erro_tipo_numerico}		{ ERRO("Numero definido em um tipo numerico que nao pertence a linguagem: %s\n", yytext);}
+{erro_variavel_upcase}		{ ERRO("Variaveis nao podem conter letras maiusculas.\n"); }
+{erro_variavel_numero}		{ ERRO("Variaveis devem comecar com uma letra.\n");}
+{erro_simbolo_invalido}		{ ERRO("Caracter invalido: %s\n", yytext); }
+{erro_real_invalido}		{ ERRO("Numero real invalido: %s\n", yytext);}
+{erro_token_invalido}		{ ERRO("Token invalido: %s\n", yytext);}
+{outros}					{ ERRO("Erro no lexema %s\n", yytext);}
 
 
 

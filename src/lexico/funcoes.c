@@ -10,6 +10,12 @@ void erro(const char *erro) {
 	fprintf(stdout, "Erro (%d, %d): %s\n", linha, coluna, erro);
 }
 
+void debug(const char *msg) {
+	#if(DEBUG)
+		printf("%s\n", msg);
+	#endif
+}
+
 void ignorar_comentario(const char *comentario, unsigned int tam) {
 	unsigned int i = 0;
 	for (; i < tam; ++i) {

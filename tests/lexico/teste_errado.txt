@@ -18,14 +18,19 @@ int &fatorial(int num){
 /*******************************************************/
 
 void main(){
-	
-	^char vetor[3];
 
+	int i = 0x1111;
+	int j = 0xffff;
+	float 0xzapzap = 0b1111;
+	float 0x11fc = 0b11001;
+	float 0b2222   = 0;
+	^char vetor[3];
+	goto main;
 	int Resultado, $num = 4;
 	float 5numreal;
-	
+
 	numreal = 1.2E;
-	
+
 	Resultado = fatorial(*num);
 
 	return 0;

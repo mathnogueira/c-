@@ -10,8 +10,8 @@
 # ----------------------------------------------------------------------------
 
 APP     = c-
-CC      = gcc -ansi
-FC		= lex -d
+CC      = gcc
+FC		= lex
 RM      = rm
 SRCDIR  = src
 TESTDIR = tests
