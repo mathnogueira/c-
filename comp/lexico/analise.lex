@@ -95,7 +95,7 @@ outros 						.
 {comentario}				{ ignorar_comentario(yytext, yyleng); }
 {tipo}						{ DEBUG("<TIPO, %s>\n", yytext); coluna += yyleng; }
 {palavra_reservada}			{ DEBUG("<PALAVRA_RESERVADA, %s>\n", yytext); coluna += yyleng; }
-{ident}						{ DEBUG("<IDENT, %s>\n", yytext); coluna += yyleng; }
+{ident}						{ DEBUG("<IDENT, %s, %d>\n", yytext, adicionar_token(yytext)); coluna += yyleng; }
 {relacional}				{ DEBUG("<RELOP, %s>\n", yytext); coluna += yyleng; }
 {atribuicao}				{ DEBUG("<ATRIBUICAO, %s>\n", yytext); coluna += yyleng; }
 {soma}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; }
@@ -130,6 +130,7 @@ int main(int argc, char *argv[]) {
 	yyout = stdout;
 	yylex();
 	fclose(yyin);
+	termina();
 	return 0;
 }
 

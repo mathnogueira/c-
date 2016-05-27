@@ -901,7 +901,7 @@ YY_RULE_SETUP
 case 6:
 YY_RULE_SETUP
 #line 98 "comp/lexico/analise.lex"
-{ DEBUG("<IDENT, %s>\n", yytext); coluna += yyleng; }
+{ DEBUG("<IDENT, %s, %d>\n", yytext, adicionar_token(yytext)); coluna += yyleng; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
@@ -2034,6 +2034,7 @@ int main(int argc, char *argv[]) {
 	yyout = stdout;
 	yylex();
 	fclose(yyin);
+	termina();
 	return 0;
 }
 
