@@ -105,13 +105,13 @@ outros 						.
 {num_int}					{ DEBUG("<NUM_INT, %d>\n", atoi(yytext)); coluna += yyleng; }
 {num}						{ DEBUG("<NUM, %f>\n", atof(yytext)); coluna += yyleng; }
 {ponto_virgula}				{ DEBUG("<PONTO_VIRGULA, %s>\n", yytext); coluna += yyleng; }
-{abre_chave}				{ coluna += yyleng; }
-{fecha_chave}				{ coluna += yyleng; }
-{abre_parenteses} 			{ coluna += yyleng; }
-{fecha_parenteses}			{ coluna += yyleng; }
-{abre_colchete}				{ coluna += yyleng; }
-{fecha_colchete}			{ coluna += yyleng; }
-{virgula}					{ coluna += yyleng; }
+{abre_chave}				{ DEBUG("<ABRE_CHAVE>\n", yytext); coluna += yyleng; }
+{fecha_chave}				{ DEBUG("<FECHA_CHAVE>\n", yytext); coluna += yyleng; }
+{abre_parenteses} 			{ DEBUG("<ABRE_PARENTESES>\n", yytext); coluna += yyleng; }
+{fecha_parenteses}			{ DEBUG("<FECHA_PARENTESES>\n", yytext); coluna += yyleng; }
+{abre_colchete}				{ DEBUG("<ABRE_COLCHETE>\n", yytext); coluna += yyleng; }
+{fecha_colchete}			{ DEBUG("<FECHA_COLCHETE>\n", yytext); coluna += yyleng; }
+{virgula}					{ DEBUG("<VIRGULA>\n", yytext); coluna += yyleng; }
 {erro_tipo_numerico}		{ ERRO("Numero definido em um tipo numerico que nao pertence a linguagem: %s\n", yytext);}
 {erro_variavel_upcase}		{ ERRO("Variaveis nao podem conter letras maiusculas.\n"); }
 {erro_variavel_numero}		{ ERRO("Variaveis devem comecar com uma letra.\n");}

@@ -951,37 +951,37 @@ YY_RULE_SETUP
 case 16:
 YY_RULE_SETUP
 #line 108 "comp/lexico/analise.lex"
-{ coluna += yyleng; }
+{ DEBUG("<ABRE_CHAVE>\n", yytext); coluna += yyleng; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 109 "comp/lexico/analise.lex"
-{ coluna += yyleng; }
+{ DEBUG("<FECHA_CHAVE>\n", yytext); coluna += yyleng; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 110 "comp/lexico/analise.lex"
-{ coluna += yyleng; }
+{ DEBUG("<ABRE_PARENTESES>\n", yytext); coluna += yyleng; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 111 "comp/lexico/analise.lex"
-{ coluna += yyleng; }
+{ DEBUG("<FECHA_PARENTESES>\n", yytext); coluna += yyleng; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 112 "comp/lexico/analise.lex"
-{ coluna += yyleng; }
+{ DEBUG("<ABRE_COLCHETE>\n", yytext); coluna += yyleng; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 113 "comp/lexico/analise.lex"
-{ coluna += yyleng; }
+{ DEBUG("<FECHA_COLCHETE>\n", yytext); coluna += yyleng; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 114 "comp/lexico/analise.lex"
-{ coluna += yyleng; }
+{ DEBUG("<VIRGULA>\n", yytext); coluna += yyleng; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
