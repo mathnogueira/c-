@@ -6,7 +6,7 @@
 	void yyerror(const char *s);
 	extern FILE *yyin, *yyout;
 	extern char* yytext;
-	/*int yydebug = 1;*/
+	int yydebug = 1;
 %}
 
 %token INT FLOAT CHAR VOID STRUCT TIPO
@@ -22,6 +22,8 @@
 
 %nonassoc IF_PREC
 %nonassoc ELSE
+
+%error-verbose
 
 %start programa
 
@@ -50,8 +52,8 @@ declaracao:
 
 /* Declaracao de variavel (unitaria ou vetor) */
 var_declaracao:
-	tipo_especificador IDENT
-	| tipo_especificador IDENT var_colchete
+	tipo_especificador IDENT PONTO_VIRGULA
+	| tipo_especificador IDENT var_colchete PONTO_VIRGULA
 	;
 
 /* Declaracao auxiliar para definir os colchetes de um vetor */
@@ -79,13 +81,13 @@ fatoracao_atributos_declaracao:
 /* Declaração de uma função do programa */
 fun_declaracao:
 	  tipo_especificador IDENT ABRE_PARENTESES params FECHA_PARENTESES composto_decl
-	  | error FECHA_PARENTESES				{ yyerror("Fia da mae!!"); }
+	  /*| error FECHA_PARENTESES				{ yyerror("Fia da mae!!"); }*/
 	  ;
 
 /* Parametros de uma função */
 params:
-	VOID
-	| param_lista
+	  param_lista
+	| VOID
 	;
 
 /* Lista de parametros de uma função, usando virgula como separador. */
@@ -111,14 +113,22 @@ composto_decl:
 
 /* declaração de variaveis */
 local_declaracoes:
-	  /* Lambda */
-	| var_declaracao local_declaracoes
+	  var_declaracao fatoracao_local_declaracoes
+	|
+	;
+
+fatoracao_local_declaracoes:
+	  local_declaracoes
 	;
 
 /* Lista de comandos */
 comando_lista:
-	  /* Lambda */
-	| comando comando_lista
+	  comando fatoracao_comando_lista
+	|
+	;
+
+fatoracao_comando_lista:
+	comando_lista
 	;
 
 /* Comando */
@@ -138,10 +148,8 @@ expressao_decl:
 
 /* Declaração de um IF */
 selecao_decl:
-	      /*IF ABRE_PARENTESES expressao FECHA_PARENTESES comando %prec IFX
-		| IF ABRE_PARENTESES expressao FECHA_PARENTESES ELSE comando*/
-		selecao fatoracao_selecao_decl
-		;
+	selecao fatoracao_selecao_decl
+	;
 
 fatoracao_selecao_decl:
 	  %prec IF_PREC
@@ -228,8 +236,8 @@ ativacao:
 	IDENT ABRE_PARENTESES args FECHA_PARENTESES
 
 args:
-	  /* Lambda */
-	| arg_lista
+	arg_lista
+	|
 	;
 
 arg_lista:
@@ -258,6 +266,5 @@ int main(int argc, char *argv[]) {
 }
 
 void yyerror(const char *s) {
-	/*return 1;*/
 	printf("%s na linha %d, coluna %d\n", s, linha, coluna);
 }
