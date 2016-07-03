@@ -6,7 +6,7 @@
 	void yyerror(const char *s);
 	extern FILE *yyin, *yyout;
 	extern char* yytext;
-	int yydebug = 1;
+	/*int yydebug = 1;*/
 %}
 
 %token INT FLOAT CHAR VOID STRUCT TIPO
@@ -81,7 +81,7 @@ fatoracao_atributos_declaracao:
 /* Declaração de uma função do programa */
 fun_declaracao:
 	  tipo_especificador IDENT ABRE_PARENTESES params FECHA_PARENTESES composto_decl
-	  /*| error FECHA_PARENTESES				{ yyerror("Fia da mae!!"); }*/
+	  | error FECHA_PARENTESES { yyclearin; yyerror("ERRO NAO DETERMINADO AINDA"); }
 	  ;
 
 /* Parametros de uma função */
@@ -133,11 +133,11 @@ fatoracao_comando_lista:
 
 /* Comando */
 comando:
-	  expressao_decl
-	| composto_decl
-	| selecao_decl
+	  selecao_decl
 	| iteracao_decl
 	| retorno_decl
+	| expressao_decl
+	| composto_decl
 	;
 
 /* Declaracao de uma expressao */

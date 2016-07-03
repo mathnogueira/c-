@@ -17,14 +17,11 @@ int fatorial(int num){
 /*                                                     */
 /*******************************************************/
 
-int main(void){
-
-	int numreal;
-	numreal = 1.2;
-
-	
+int main(int){
+	float numreal;
 	int resultado;
 	resultado = 4;
+	numreal = 1.2;
 
 	while (1) {
 		i = i + 1;
