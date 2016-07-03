@@ -12,6 +12,7 @@
 APP     = c-
 CC      = gcc
 FC		= lex
+LC      = yacc -t -v
 RM      = rm
 SRCDIR  = src
 TESTDIR = tests
@@ -19,6 +20,8 @@ SRCEXT  = c
 OBJDIR  = build
 
 LEX     := src/lexico/lex.yy.c
+YACC	:= src/sintatico/y.tab.c
+YACC_HEADER := include/sintatico/y.tab.h
 SRCS    := $(shell find $(SRCDIR) -name '*.$(SRCEXT)')
 SRCDIRS := $(shell find . -name '*.$(SRCEXT)' -exec dirname {} \; | uniq)
 OBJS    := $(patsubst %.$(SRCEXT),$(OBJDIR)/%.o,$(SRCS))
@@ -31,7 +34,7 @@ CFLAGS  = -lm -c $(DEBUG) $(INCLUDE)
 OFLAGS  = -lm -msse2 -ffast-math -ftree-vectorize
 LDFLAGS =
 
-all:    $(LEX) $(APP)
+all:    $(LEX) $(YACC) $(APP)
 
 debug:  buildrepo $(OBJS)
 		$(CC) $(OBJS) $(OFLAGS) $(LDFLAGS) -o $(OBJDIR)/$@
@@ -39,6 +42,11 @@ debug:  buildrepo $(OBJS)
 $(LEX):	comp/lexico/analise.lex
 	$(FC) $^
 	mv lex.yy.c src/lexico/lex.yy.c
+
+$(YACC): comp/sintatico/analise.y
+	$(LC) $^ -d
+	mv y.tab.c src/sintatico/y.tab.c
+	mv y.tab.h include/sintatico/y.tab.h
 
 $(APP): buildrepo $(OBJS)
 		$(CC) $(OBJS) $(OFLAGS) $(LDFLAGS) -o $(OBJDIR)/$@
@@ -50,6 +58,8 @@ $(OBJDIR)/%.o: %.$(SRCEXT)
 clean:
 		$(RM) -r -f $(OBJDIR) docs
 		rm $(LEX)
+		rm $(YACC)
+		rm $(YACC_HEADER)
 
 buildrepo:
 		$(call make-repo)

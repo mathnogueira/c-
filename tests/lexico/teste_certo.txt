@@ -17,18 +17,17 @@ int fatorial(int num){
 /*                                                     */
 /*******************************************************/
 
-
-int main(){
+int main(int){
 
 	/* variavel para teste */
 	float numreal;
 	numreal = 1.2;
 
-	/* variavel para calcular o fatorial */	
+	/* variavel para calcular o fatorial */
 	int resultado;
-	int num = 4;	
-	
-	
+	int num = 4;
+
+
 	/* chamada para a funcao fatorial */
 	resultado = fatorial(num);
 	return 0;

@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <lexico/funcoes.h>
+#include <sintatico/y.tab.h>
 
 %}
 
@@ -11,7 +12,7 @@ float						"float"
 char						"char"
 void						"void"
 struct						"struct"
-tipo						{int}|{float}|{char}|{void}|{struct}
+tipo						{int}|{float}|{char}|{void}
 
 /* COMENTARIOS */
 abre_comentario				"/*"
@@ -25,7 +26,7 @@ if							"if"
 else						"else"
 while						"while"
 return						"return"
-palavra_reservada			{if}|{else}|{while}|{return}
+/*palavra_reservada			{if}|{else}|{while}|{return}*/
 
 /* OPERADORES RELACIONAIS */
 relacional					"<="|"<"|">"|">="|"=="|"!="
@@ -90,28 +91,32 @@ outros 						.
 %%
 
 
-{quebra_linha}				{ linha++; coluna = 1;}
+{quebra_linha}				{ linha++; coluna = 1; }
 {ws}						{ coluna += yyleng; }
 {comentario}				{ ignorar_comentario(yytext, yyleng); }
-{tipo}						{ DEBUG("<TIPO, %s>\n", yytext); coluna += yyleng; }
-{palavra_reservada}			{ DEBUG("<PALAVRA_RESERVADA, %s>\n", yytext); coluna += yyleng; }
-{ident}						{ DEBUG("<IDENT, %s, %d>\n", yytext, adicionar_token(yytext)); coluna += yyleng; }
-{relacional}				{ DEBUG("<RELOP, %s>\n", yytext); coluna += yyleng; }
-{atribuicao}				{ DEBUG("<ATRIBUICAO, %s>\n", yytext); coluna += yyleng; }
-{soma}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; }
-{sub}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; }
-{mult}						{ DEBUG("<MULT, %s>\n", yytext); coluna += yyleng; }
-{div}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; }
-{num_int}					{ DEBUG("<NUM_INT, %d>\n", atoi(yytext)); coluna += yyleng; }
-{num}						{ DEBUG("<NUM, %f>\n", atof(yytext)); coluna += yyleng; }
-{ponto_virgula}				{ DEBUG("<PONTO_VIRGULA, %s>\n", yytext); coluna += yyleng; }
-{abre_chave}				{ DEBUG("<ABRE_CHAVE>\n", yytext); coluna += yyleng; }
-{fecha_chave}				{ DEBUG("<FECHA_CHAVE>\n", yytext); coluna += yyleng; }
-{abre_parenteses} 			{ DEBUG("<ABRE_PARENTESES>\n", yytext); coluna += yyleng; }
-{fecha_parenteses}			{ DEBUG("<FECHA_PARENTESES>\n", yytext); coluna += yyleng; }
-{abre_colchete}				{ DEBUG("<ABRE_COLCHETE>\n", yytext); coluna += yyleng; }
-{fecha_colchete}			{ DEBUG("<FECHA_COLCHETE>\n", yytext); coluna += yyleng; }
-{virgula}					{ DEBUG("<VIRGULA>\n", yytext); coluna += yyleng; }
+{void}						{ DEBUG("<TIPO, %s>\n", yytext); coluna += yyleng; return VOID; }
+{tipo}						{ DEBUG("<TIPO, %s>\n", yytext); coluna += yyleng; return TIPO; }
+{if}						{ DEBUG("<IF>\n", yytext); coluna += yyleng; return IF; }
+{while}						{ DEBUG("<WHILE>\n", yytext); coluna += yyleng; return WHILE; }
+{else}						{ DEBUG("<ELSE>\n", yytext); coluna += yyleng; return ELSE; }
+{return}					{ DEBUG("<RETURN>\n", yytext); coluna += yyleng; return RETURN; }
+{ident}						{ DEBUG("<IDENT, %s, %d>\n", yytext, adicionar_token(yytext)); coluna += yyleng; return IDENT; }
+{relacional}				{ DEBUG("<RELOP, %s>\n", yytext); coluna += yyleng; return RELACIONAL; }
+{atribuicao}				{ DEBUG("<ATRIBUICAO, %s>\n", yytext); coluna += yyleng; return ATRIBUICAO; }
+{soma}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; return SOMA; }
+{sub}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; return SUB; }
+{mult}						{ DEBUG("<MULT, %s>\n", yytext); coluna += yyleng; return MULT; }
+{div}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; return DIV; }
+{num_int}					{ DEBUG("<NUM_INT, %d>\n", atoi(yytext)); coluna += yyleng; return NUM_INT; }
+{num}						{ DEBUG("<NUM, %f>\n", atof(yytext)); coluna += yyleng; return NUM; }
+{ponto_virgula}				{ DEBUG("<PONTO_VIRGULA, %s>\n", yytext); coluna += yyleng; return PONTO_VIRGULA; }
+{abre_chave}				{ DEBUG("<ABRE_CHAVE>\n", yytext); coluna += yyleng; return ABRE_CHAVE; }
+{fecha_chave}				{ DEBUG("<FECHA_CHAVE>\n", yytext); coluna += yyleng; return FECHA_CHAVE; }
+{abre_parenteses} 			{ DEBUG("<ABRE_PARENTESES>\n", yytext); coluna += yyleng; return ABRE_PARENTESES; }
+{fecha_parenteses}			{ DEBUG("<FECHA_PARENTESES>\n", yytext); coluna += yyleng; return FECHA_PARENTESES; }
+{abre_colchete}				{ DEBUG("<ABRE_COLCHETE>\n", yytext); coluna += yyleng; return ABRE_COLCHETE; }
+{fecha_colchete}			{ DEBUG("<FECHA_COLCHETE>\n", yytext); coluna += yyleng; return FECHA_COLCHETE; }
+{virgula}					{ DEBUG("<VIRGULA>\n", yytext); coluna += yyleng; return VIRGULA; }
 {erro_tipo_numerico}		{ ERRO("Numero definido em um tipo numerico que nao pertence a linguagem: %s\n", yytext);}
 {erro_variavel_upcase}		{ ERRO("Variaveis nao podem conter letras maiusculas.\n"); }
 {erro_variavel_numero}		{ ERRO("Variaveis devem comecar com uma letra.\n");}
@@ -120,48 +125,18 @@ outros 						.
 {erro_token_invalido}		{ ERRO("Token invalido: %s\n", yytext);}
 {outros}					{ ERRO("Erro no lexema %s\n", yytext);}
 
-
-
 %%
 
-int main(int argc, char *argv[]) {
+/*int main(int argc, char *argv[]) {
 	inicializa();
 	yyin = fopen(argv[1], "r");
 	yyout = stdout;
 	yylex();
 	fclose(yyin);
 	termina();
-	return 0;
-}
+return 0;
+}*/
 
 int yywrap() {
     return 1;
 }
-
-/*
-	DUVIDAS:
-	### Numero inteiro pode ser negativo?
-	### Ponto e virgula depois de tipo?
-	### (SINTATICA) Atributos-declaracao
-
-	Erros a tratar:
-
-	9.9e | 9.9e-- | 9.9ee | etc
-	struct int
-	2+2.9 ==> <num_int><num>
-
-	Tipos não definidos:
-
-	- Hexadecimal
-	- Octal
-	- Binario
-
-	Comentario precisa ser ignorado (não precisa ter um token COMENTARIO)
-	LEX precisa identificar erros.
-
-	Usar ponto e virgula é um TOKEN.
-
-	Dar print no nome dos tokens (linha a linha)
-
-	ERRO: Exibir mensagem bonitinha pro usuário
-*/
