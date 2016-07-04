@@ -4,7 +4,16 @@
 #include <lexico/funcoes.h>
 #include <sintatico/y.tab.h>
 
+int yycolumn = 1;
+unsigned char pulou_linha = 0;
+
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno; \
+    yylloc.first_column = yycolumn; yylloc.last_column = yycolumn + yyleng - 1; \
+    yycolumn += yyleng;
+
 %}
+
+%option yylineno
 
 /* TIPOS */
 int 						"int"
@@ -91,32 +100,32 @@ outros 						.
 %%
 
 
-{quebra_linha}				{ linha++; coluna = 1; }
+{quebra_linha}				{ linha++; yycolumn = 1; pulou_linha = 1; }
 {ws}						{ coluna += yyleng; }
-{comentario}				{ ignorar_comentario(yytext, yyleng); }
-{void}						{ DEBUG("<TIPO, %s>\n", yytext); coluna += yyleng; return VOID; }
-{tipo}						{ DEBUG("<TIPO, %s>\n", yytext); coluna += yyleng; return TIPO; }
-{if}						{ DEBUG("<IF>\n", yytext); coluna += yyleng; return IF; }
-{while}						{ DEBUG("<WHILE>\n", yytext); coluna += yyleng; return WHILE; }
-{else}						{ DEBUG("<ELSE>\n", yytext); coluna += yyleng; return ELSE; }
-{return}					{ DEBUG("<RETURN>\n", yytext); coluna += yyleng; return RETURN; }
-{ident}						{ DEBUG("<IDENT, %s, %d>\n", yytext, adicionar_token(yytext)); coluna += yyleng; return IDENT; }
-{relacional}				{ DEBUG("<RELOP, %s>\n", yytext); coluna += yyleng; return RELACIONAL; }
-{atribuicao}				{ DEBUG("<ATRIBUICAO, %s>\n", yytext); coluna += yyleng; return ATRIBUICAO; }
-{soma}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; return SOMA; }
-{sub}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; return SUB; }
-{mult}						{ DEBUG("<MULT, %s>\n", yytext); coluna += yyleng; return MULT; }
-{div}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; return DIV; }
-{num_int}					{ DEBUG("<NUM_INT, %d>\n", atoi(yytext)); coluna += yyleng; return NUM_INT; }
-{num}						{ DEBUG("<NUM, %f>\n", atof(yytext)); coluna += yyleng; return NUM; }
-{ponto_virgula}				{ DEBUG("<PONTO_VIRGULA, %s>\n", yytext); coluna += yyleng; return PONTO_VIRGULA; }
-{abre_chave}				{ DEBUG("<ABRE_CHAVE>\n", yytext); coluna += yyleng; return ABRE_CHAVE; }
-{fecha_chave}				{ DEBUG("<FECHA_CHAVE>\n", yytext); coluna += yyleng; return FECHA_CHAVE; }
-{abre_parenteses} 			{ DEBUG("<ABRE_PARENTESES>\n", yytext); coluna += yyleng; return ABRE_PARENTESES; }
-{fecha_parenteses}			{ DEBUG("<FECHA_PARENTESES>\n", yytext); coluna += yyleng; return FECHA_PARENTESES; }
-{abre_colchete}				{ DEBUG("<ABRE_COLCHETE>\n", yytext); coluna += yyleng; return ABRE_COLCHETE; }
-{fecha_colchete}			{ DEBUG("<FECHA_COLCHETE>\n", yytext); coluna += yyleng; return FECHA_COLCHETE; }
-{virgula}					{ DEBUG("<VIRGULA>\n", yytext); coluna += yyleng; return VIRGULA; }
+{comentario}				{ ignorar_comentario(yytext, yyleng); pulou_linha = 0; }
+{void}						{ DEBUG("<TIPO, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; pulou_linha = 0; return VOID; }
+{tipo}						{ DEBUG("<TIPO, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return TIPO; }
+{if}						{ DEBUG("<IF>\n", yytext); coluna += yyleng; pulou_linha = 0; return IF; }
+{while}						{ DEBUG("<WHILE>\n", yytext); coluna += yyleng; pulou_linha = 0; return WHILE; }
+{else}						{ DEBUG("<ELSE>\n", yytext); coluna += yyleng; pulou_linha = 0; return ELSE; }
+{return}					{ DEBUG("<RETURN>\n", yytext); coluna += yyleng; pulou_linha = 0; return RETURN; }
+{ident}						{ DEBUG("<IDENT, %s, %d>\n", yytext, adicionar_token(yytext)); coluna += yyleng; pulou_linha = 0; return IDENT; }
+{relacional}				{ DEBUG("<RELOP, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return RELACIONAL; }
+{atribuicao}				{ DEBUG("<ATRIBUICAO, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return ATRIBUICAO; }
+{soma}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return SOMA; }
+{sub}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return SUB; }
+{mult}						{ DEBUG("<MULT, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return MULT; }
+{div}						{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return DIV; }
+{num_int}					{ DEBUG("<NUM_INT, %d>\n", atoi(yytext)); coluna += yyleng; pulou_linha = 0; return NUM_INT; }
+{num}						{ DEBUG("<NUM, %f>\n", atof(yytext)); coluna += yyleng; pulou_linha = 0; return NUM; }
+{ponto_virgula}				{ DEBUG("<PONTO_VIRGULA, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return PONTO_VIRGULA; }
+{abre_chave}				{ DEBUG("<ABRE_CHAVE>\n", yytext); coluna += yyleng; pulou_linha = 0; return ABRE_CHAVE; }
+{fecha_chave}				{ DEBUG("<FECHA_CHAVE>\n", yytext); coluna += yyleng; pulou_linha = 0; return FECHA_CHAVE; }
+{abre_parenteses} 			{ DEBUG("<ABRE_PARENTESES>\n", yytext); coluna += yyleng; pulou_linha = 0; return ABRE_PARENTESES; }
+{fecha_parenteses}			{ DEBUG("<FECHA_PARENTESES>\n", yytext); coluna += yyleng; pulou_linha = 0; return FECHA_PARENTESES; }
+{abre_colchete}				{ DEBUG("<ABRE_COLCHETE>\n", yytext); coluna += yyleng; pulou_linha = 0; return ABRE_COLCHETE; }
+{fecha_colchete}			{ DEBUG("<FECHA_COLCHETE>\n", yytext); coluna += yyleng; pulou_linha = 0; return FECHA_COLCHETE; }
+{virgula}					{ DEBUG("<VIRGULA>\n", yytext); coluna += yyleng; pulou_linha = 0; return VIRGULA; }
 {erro_tipo_numerico}		{ ERRO("Numero definido em um tipo numerico que nao pertence a linguagem: %s\n", yytext);}
 {erro_variavel_upcase}		{ ERRO("Variaveis nao podem conter letras maiusculas.\n"); }
 {erro_variavel_numero}		{ ERRO("Variaveis devem comecar com uma letra.\n");}

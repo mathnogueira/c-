@@ -1,11 +1,15 @@
 %{
 	#include <stdio.h>
+	#include <string.h>
 	#include <lexico/funcoes.h>
+	#include <sintatico/erro.h>
 
-	int yylex(void);
-	void yyerror(const char *s);
+	int yylex();
+	void yyerror (const char *msg);
 	extern FILE *yyin, *yyout;
 	extern char* yytext;
+	unsigned int errno;
+	extern unsigned char pulou_linha;
 	/*int yydebug = 1;*/
 %}
 
@@ -26,6 +30,8 @@
 %error-verbose
 
 %start programa
+
+%locations
 
 %%
 
@@ -54,12 +60,14 @@ declaracao:
 var_declaracao:
 	tipo_especificador IDENT PONTO_VIRGULA
 	| tipo_especificador IDENT var_colchete PONTO_VIRGULA
+	| error		{ errno = NO_SEMICOLON; yyclearin;}
 	;
 
 /* Declaracao auxiliar para definir os colchetes de um vetor */
 var_colchete:
 	ABRE_COLCHETE NUM_INT FECHA_COLCHETE var_colchete
 	| ABRE_COLCHETE NUM_INT FECHA_COLCHETE
+	| ABRE_COLCHETE error FECHA_COLCHETE		{}
 	;
 
 /* Declaracao de um tipo de um programa. */
@@ -81,13 +89,15 @@ fatoracao_atributos_declaracao:
 /* Declaração de uma função do programa */
 fun_declaracao:
 	  tipo_especificador IDENT ABRE_PARENTESES params FECHA_PARENTESES composto_decl
-	  | error FECHA_PARENTESES { yyclearin; yyerror("ERRO NAO DETERMINADO AINDA"); }
+	  | tipo_especificador IDENT ABRE_PARENTESES params error composto_decl {}
+	  | tipo_especificador error ABRE_PARENTESES params FECHA_PARENTESES composto_decl {}
 	  ;
 
 /* Parametros de uma função */
 params:
 	  param_lista
 	| VOID
+	| error
 	;
 
 /* Lista de parametros de uma função, usando virgula como separador. */
@@ -104,6 +114,7 @@ fatoracao_params_lista:
 param:
 	  tipo_especificador IDENT
 	| tipo_especificador IDENT ABRE_COLCHETE FECHA_COLCHETE
+	| tipo_especificador IDENT ABRE_COLCHETE error 	{}
 	;
 
 /* Grupo de declarações */
@@ -157,7 +168,7 @@ fatoracao_selecao_decl:
 	;
 
 selecao:
-	IF ABRE_PARENTESES expressao FECHA_PARENTESES comando
+	  IF ABRE_PARENTESES expressao FECHA_PARENTESES comando
 
 /* Laço de repetição */
 iteracao_decl:
@@ -226,6 +237,7 @@ mult:
 /* Fator */
 fator:
 	  ABRE_PARENTESES expressao FECHA_PARENTESES
+	| ABRE_PARENTESES expressao error
 	| var
 	| ativacao
 	| NUM
@@ -234,6 +246,7 @@ fator:
 
 ativacao:
 	IDENT ABRE_PARENTESES args FECHA_PARENTESES
+	| IDENT ABRE_PARENTESES args error 			{ errno = NO_RPARENTHESIS; yyerrok; yyclearin; }
 
 args:
 	arg_lista
@@ -265,6 +278,40 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
-void yyerror(const char *s) {
-	printf("%s na linha %d, coluna %d\n", s, linha, coluna);
+void yyerror (const char *msg) {
+	char* message = (char*) msg;
+	/*printf("%s na linha %d, coluna %d\n", msg, yylloc.first_line, yylloc.first_column);*/
+	/*if (errno == NO_RBRACE)
+		message = "Missing }";
+	else if (errno == NO_RPARENTHESIS)
+		message = "Missing )";
+	else if (errno == NO_SEMICOLON)
+		message = "Missing ;";*/
+	if (strcmp(msg, "syntax error, unexpected IDENT, expecting ABRE_COLCHETE or PONTO_VIRGULA") == 0) {
+		message = "Você esqueceu de colocar ; ou []";
+	} else if (strcmp(msg, "syntax error, unexpected IDENT, expecting PONTO_VIRGULA") == 0) {
+		message = "Você esqueceu de colocar ;";
+	} else if (strcmp(msg, "syntax error, unexpected FECHA_PARENTESES, expecting NUM_INT or NUM or ABRE_PARENTESES or IDENT") == 0) {
+		message = "Você declarou a lista de argumentos de maneira errada";
+	} else if (strcmp(msg, "syntax error, unexpected ABRE_CHAVE, expecting FECHA_PARENTESES") == 0) {
+		message = "Você não fechou o parenteses da função";
+	} else if (strcmp(msg, "syntax error, unexpected FECHA_PARENTESES, expecting FECHA_COLCHETE") == 0) {
+		message = "Você esqueceu de fechar o colchete";
+	} else if (strcmp(msg, "syntax error, unexpected FECHA_COLCHETE, expecting NUM_INT") == 0) {
+		message = "Você não definiu o tamanho do vetor";
+	} else if (strcmp(msg, "syntax error, unexpected ABRE_PARENTESES, expecting IDENT") == 0) {
+		message = "Você esqueceu de definir um nome para a função";
+	} else if (strcmp(msg, "syntax error, unexpected FECHA_PARENTESES, expecting VOID or STRUCT or TIPO") == 0) {
+		message = "Você deve definir sua função recebendo void como parametro";
+	} else if (
+		strcmp(msg, "syntax error, unexpected IDENT, expecting FECHA_PARENTESES") == 0 ||
+		strcmp(msg, "syntax error, unexpected FECHA_PARENTESES, expecting PONTO_VIRGULA") == 0
+		) {
+		message = "Você esqueceu de fechar o parenteses da chamada de função ou separar os parametros por virgula";
+	} else if (strcmp(msg, "syntax error, unexpected PONTO_VIRGULA, expecting FECHA_PARENTESES") == 0) {
+		message = "Você esqueceu de fechar o parenteses";
+	}
+	unsigned int linha = yylloc.first_line;
+	unsigned int coluna = yylloc.first_column;
+	printf("%s na linha %d, coluna %d\n", message, linha, coluna);
 }
