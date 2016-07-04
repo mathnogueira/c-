@@ -1,5 +1,5 @@
-int fatorial(int num, float k[) {
-	int i[];
+int fatorial(int num, float k) {
+	int i[10];
 	/* Funcao que calcula o fatorial de um numero */
 	if (num == 0) {
 		return 1;
@@ -12,16 +12,8 @@ int fatorial(int num, float k[) {
 	}
 }
 
-int (int j) {
+int retornazero(int j) {
 	return 0;
-}
-
-int k() {
-
-	struct teste {
-		int b;
-		int abiguinho;
-	} teste;
 }
 
 /*******************************************************/
@@ -32,9 +24,9 @@ int k() {
 
 int main(void){
 	float numreal;
-	int resultado
+	int resultado;
 	resultado = 4;
-	numreal = 1.2
+	numreal = 1.2;
 	numreal = 1;
 	numreal = 3 - 4;
 	numreal = 4 + (3 * 5);
@@ -43,8 +35,7 @@ int main(void){
 	}
 
 	/* chamada para a funcao fatorial */
-	resultado = fatorial(num,);
-	resultado = fatorial(num joy);
-	resultado = 2 + ((3 + 4) * 3;
+	resultado = fatorial(num);
+	resultado = 2 + ((3 + 4) * 3);
 	return 0;
 }
