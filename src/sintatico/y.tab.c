@@ -1784,9 +1784,7 @@ int main(int argc, char *argv[]) {
 	yyin = fopen(argv[1], "r");
 	/*yyout = stdout;*/
 	do {
-		printf("EOF %d\n", feof(yyin));
 		yyparse();
-		printf("EOF %d\n", feof(yyin));
 	} while (!feof(yyin));
 	fclose(yyin);
 	termina();
