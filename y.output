@@ -1,0 +1,1626 @@
+Terminals unused in grammar
+
+   INT
+   FLOAT
+   CHAR
+   PALAVRA_RESERVADA
+   LETRA
+   DIGITO
+   DIGITOS
+   PALVRA
+   BINARIO
+   HEXA
+   PONTO
+   QUEBRA_LINHA
+   WS
+   COMENTARIO
+
+
+Grammar
+
+    0 $accept: programa $end
+
+    1 programa: declaracao_lista
+
+    2 declaracao_lista: declaracao fatoracao_declaracao_lista
+
+    3 fatoracao_declaracao_lista: declaracao_lista
+    4                           | %empty
+
+    5 declaracao: var_declaracao
+    6           | fun_declaracao
+
+    7 var_declaracao: tipo_especificador IDENT PONTO_VIRGULA
+    8               | tipo_especificador IDENT var_colchete PONTO_VIRGULA
+    9               | error
+
+   10 var_colchete: ABRE_COLCHETE NUM_INT FECHA_COLCHETE var_colchete
+   11             | ABRE_COLCHETE NUM_INT FECHA_COLCHETE
+   12             | ABRE_COLCHETE error FECHA_COLCHETE
+
+   13 tipo_especificador: TIPO
+   14                   | STRUCT IDENT ABRE_CHAVE atributos_declaracao FECHA_CHAVE
+
+   15 atributos_declaracao: var_declaracao fatoracao_atributos_declaracao
+
+   16 fatoracao_atributos_declaracao: atributos_declaracao
+   17                               | %empty
+
+   18 fun_declaracao: tipo_especificador IDENT ABRE_PARENTESES params FECHA_PARENTESES composto_decl
+   19               | tipo_especificador IDENT ABRE_PARENTESES params error composto_decl
+   20               | tipo_especificador error ABRE_PARENTESES params FECHA_PARENTESES composto_decl
+
+   21 params: param_lista
+   22       | VOID
+   23       | error
+
+   24 param_lista: param fatoracao_params_lista
+
+   25 fatoracao_params_lista: VIRGULA param_lista
+   26                       | %empty
+
+   27 param: tipo_especificador IDENT
+   28      | tipo_especificador IDENT ABRE_COLCHETE FECHA_COLCHETE
+   29      | tipo_especificador IDENT ABRE_COLCHETE error
+
+   30 composto_decl: ABRE_CHAVE local_declaracoes comando_lista FECHA_CHAVE
+
+   31 local_declaracoes: var_declaracao fatoracao_local_declaracoes
+   32                  | %empty
+
+   33 fatoracao_local_declaracoes: local_declaracoes
+
+   34 comando_lista: comando fatoracao_comando_lista
+   35              | %empty
+
+   36 fatoracao_comando_lista: comando_lista
+
+   37 comando: selecao_decl
+   38        | iteracao_decl
+   39        | retorno_decl
+   40        | expressao_decl
+   41        | composto_decl
+
+   42 expressao_decl: expressao PONTO_VIRGULA
+   43               | PONTO_VIRGULA
+
+   44 selecao_decl: selecao fatoracao_selecao_decl
+
+   45 fatoracao_selecao_decl: %empty
+   46                       | ELSE comando
+
+   47 selecao: IF ABRE_PARENTESES expressao FECHA_PARENTESES comando
+
+   48 iteracao_decl: WHILE ABRE_PARENTESES expressao FECHA_PARENTESES comando
+
+   49 retorno_decl: RETURN PONTO_VIRGULA
+   50             | RETURN expressao PONTO_VIRGULA
+
+   51 expressao: var ATRIBUICAO expressao
+   52          | expressao_simples
+
+   53 var: IDENT
+   54    | IDENT colchete_var
+
+   55 colchete_var: ABRE_COLCHETE expressao FECHA_COLCHETE colchete_var
+   56             | ABRE_COLCHETE expressao FECHA_COLCHETE
+
+   57 expressao_simples: expressao_soma relacional expressao_soma
+   58                  | expressao_soma
+
+   59 relacional: RELACIONAL
+
+   60 expressao_soma: termo soma expressao_soma
+   61               | termo
+
+   62 soma: SOMA
+   63     | SUB
+
+   64 termo: fator mult termo
+   65      | fator
+
+   66 mult: MULT
+   67     | DIV
+
+   68 fator: ABRE_PARENTESES expressao FECHA_PARENTESES
+   69      | ABRE_PARENTESES expressao error
+   70      | var
+   71      | ativacao
+   72      | NUM
+   73      | NUM_INT
+
+   74 ativacao: IDENT ABRE_PARENTESES args FECHA_PARENTESES
+   75         | IDENT ABRE_PARENTESES args error
+
+   76 args: arg_lista
+   77     | %empty
+
+   78 arg_lista: expressao fatoracao_arg_lista
+
+   79 fatoracao_arg_lista: VIRGULA arg_lista
+   80                    | %empty
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256) 9 12 19 20 23 29 69 75
+INT (258)
+FLOAT (259)
+CHAR (260)
+VOID (261) 22
+STRUCT (262) 14
+TIPO (263) 13
+IF (264) 47
+ELSE (265) 46
+WHILE (266) 48
+RETURN (267) 49 50
+PALAVRA_RESERVADA (268)
+RELACIONAL (269) 59
+SOMA (270) 62
+SUB (271) 63
+MULT (272) 66
+DIV (273) 67
+ATRIBUICAO (274) 51
+NUM_INT (275) 10 11 73
+NUM (276) 72
+ABRE_CHAVE (277) 14 30
+FECHA_CHAVE (278) 14 30
+ABRE_COLCHETE (279) 10 11 12 28 29 55 56
+FECHA_COLCHETE (280) 10 11 12 28 55 56
+ABRE_PARENTESES (281) 18 19 20 47 48 68 69 74 75
+FECHA_PARENTESES (282) 18 20 47 48 68 74
+LETRA (283)
+DIGITO (284)
+DIGITOS (285)
+PALVRA (286)
+BINARIO (287)
+HEXA (288)
+IDENT (289) 7 8 14 18 19 27 28 29 53 54 74 75
+PONTO (290)
+VIRGULA (291) 25 79
+PONTO_VIRGULA (292) 7 8 42 43 49 50
+QUEBRA_LINHA (293)
+WS (294)
+COMENTARIO (295)
+IF_PREC (296)
+
+
+Nonterminals, with rules where they appear
+
+$accept (42)
+    on left: 0
+programa (43)
+    on left: 1, on right: 0
+declaracao_lista (44)
+    on left: 2, on right: 1 3
+fatoracao_declaracao_lista (45)
+    on left: 3 4, on right: 2
+declaracao (46)
+    on left: 5 6, on right: 2
+var_declaracao (47)
+    on left: 7 8 9, on right: 5 15 31
+var_colchete (48)
+    on left: 10 11 12, on right: 8 10
+tipo_especificador (49)
+    on left: 13 14, on right: 7 8 18 19 20 27 28 29
+atributos_declaracao (50)
+    on left: 15, on right: 14 16
+fatoracao_atributos_declaracao (51)
+    on left: 16 17, on right: 15
+fun_declaracao (52)
+    on left: 18 19 20, on right: 6
+params (53)
+    on left: 21 22 23, on right: 18 19 20
+param_lista (54)
+    on left: 24, on right: 21 25
+fatoracao_params_lista (55)
+    on left: 25 26, on right: 24
+param (56)
+    on left: 27 28 29, on right: 24
+composto_decl (57)
+    on left: 30, on right: 18 19 20 41
+local_declaracoes (58)
+    on left: 31 32, on right: 30 33
+fatoracao_local_declaracoes (59)
+    on left: 33, on right: 31
+comando_lista (60)
+    on left: 34 35, on right: 30 36
+fatoracao_comando_lista (61)
+    on left: 36, on right: 34
+comando (62)
+    on left: 37 38 39 40 41, on right: 34 46 47 48
+expressao_decl (63)
+    on left: 42 43, on right: 40
+selecao_decl (64)
+    on left: 44, on right: 37
+fatoracao_selecao_decl (65)
+    on left: 45 46, on right: 44
+selecao (66)
+    on left: 47, on right: 44
+iteracao_decl (67)
+    on left: 48, on right: 38
+retorno_decl (68)
+    on left: 49 50, on right: 39
+expressao (69)
+    on left: 51 52, on right: 42 47 48 50 51 55 56 68 69 78
+var (70)
+    on left: 53 54, on right: 51 70
+colchete_var (71)
+    on left: 55 56, on right: 54 55
+expressao_simples (72)
+    on left: 57 58, on right: 52
+relacional (73)
+    on left: 59, on right: 57
+expressao_soma (74)
+    on left: 60 61, on right: 57 58 60
+soma (75)
+    on left: 62 63, on right: 60
+termo (76)
+    on left: 64 65, on right: 60 61 64
+mult (77)
+    on left: 66 67, on right: 64
+fator (78)
+    on left: 68 69 70 71 72 73, on right: 64 65
+ativacao (79)
+    on left: 74 75, on right: 71
+args (80)
+    on left: 76 77, on right: 74 75
+arg_lista (81)
+    on left: 78, on right: 76 79
+fatoracao_arg_lista (82)
+    on left: 79 80, on right: 78
+
+
+State 0
+
+    0 $accept: . programa $end
+
+    error   shift, and go to state 1
+    STRUCT  shift, and go to state 2
+    TIPO    shift, and go to state 3
+
+    programa            go to state 4
+    declaracao_lista    go to state 5
+    declaracao          go to state 6
+    var_declaracao      go to state 7
+    tipo_especificador  go to state 8
+    fun_declaracao      go to state 9
+
+
+State 1
+
+    9 var_declaracao: error .
+
+    $default  reduce using rule 9 (var_declaracao)
+
+
+State 2
+
+   14 tipo_especificador: STRUCT . IDENT ABRE_CHAVE atributos_declaracao FECHA_CHAVE
+
+    IDENT  shift, and go to state 10
+
+
+State 3
+
+   13 tipo_especificador: TIPO .
+
+    $default  reduce using rule 13 (tipo_especificador)
+
+
+State 4
+
+    0 $accept: programa . $end
+
+    $end  shift, and go to state 11
+
+
+State 5
+
+    1 programa: declaracao_lista .
+
+    $default  reduce using rule 1 (programa)
+
+
+State 6
+
+    2 declaracao_lista: declaracao . fatoracao_declaracao_lista
+
+    error   shift, and go to state 1
+    STRUCT  shift, and go to state 2
+    TIPO    shift, and go to state 3
+
+    $end  reduce using rule 4 (fatoracao_declaracao_lista)
+
+    declaracao_lista            go to state 12
+    fatoracao_declaracao_lista  go to state 13
+    declaracao                  go to state 6
+    var_declaracao              go to state 7
+    tipo_especificador          go to state 8
+    fun_declaracao              go to state 9
+
+
+State 7
+
+    5 declaracao: var_declaracao .
+
+    $default  reduce using rule 5 (declaracao)
+
+
+State 8
+
+    7 var_declaracao: tipo_especificador . IDENT PONTO_VIRGULA
+    8               | tipo_especificador . IDENT var_colchete PONTO_VIRGULA
+   18 fun_declaracao: tipo_especificador . IDENT ABRE_PARENTESES params FECHA_PARENTESES composto_decl
+   19               | tipo_especificador . IDENT ABRE_PARENTESES params error composto_decl
+   20               | tipo_especificador . error ABRE_PARENTESES params FECHA_PARENTESES composto_decl
+
+    error  shift, and go to state 14
+    IDENT  shift, and go to state 15
+
+
+State 9
+
+    6 declaracao: fun_declaracao .
+
+    $default  reduce using rule 6 (declaracao)
+
+
+State 10
+
+   14 tipo_especificador: STRUCT IDENT . ABRE_CHAVE atributos_declaracao FECHA_CHAVE
+
+    ABRE_CHAVE  shift, and go to state 16
+
+
+State 11
+
+    0 $accept: programa $end .
+
+    $default  accept
+
+
+State 12
+
+    3 fatoracao_declaracao_lista: declaracao_lista .
+
+    $default  reduce using rule 3 (fatoracao_declaracao_lista)
+
+
+State 13
+
+    2 declaracao_lista: declaracao fatoracao_declaracao_lista .
+
+    $default  reduce using rule 2 (declaracao_lista)
+
+
+State 14
+
+   20 fun_declaracao: tipo_especificador error . ABRE_PARENTESES params FECHA_PARENTESES composto_decl
+
+    ABRE_PARENTESES  shift, and go to state 17
+
+
+State 15
+
+    7 var_declaracao: tipo_especificador IDENT . PONTO_VIRGULA
+    8               | tipo_especificador IDENT . var_colchete PONTO_VIRGULA
+   18 fun_declaracao: tipo_especificador IDENT . ABRE_PARENTESES params FECHA_PARENTESES composto_decl
+   19               | tipo_especificador IDENT . ABRE_PARENTESES params error composto_decl
+
+    ABRE_COLCHETE    shift, and go to state 18
+    ABRE_PARENTESES  shift, and go to state 19
+    PONTO_VIRGULA    shift, and go to state 20
+
+    var_colchete  go to state 21
+
+
+State 16
+
+   14 tipo_especificador: STRUCT IDENT ABRE_CHAVE . atributos_declaracao FECHA_CHAVE
+
+    error   shift, and go to state 1
+    STRUCT  shift, and go to state 2
+    TIPO    shift, and go to state 3
+
+    var_declaracao        go to state 22
+    tipo_especificador    go to state 23
+    atributos_declaracao  go to state 24
+
+
+State 17
+
+   20 fun_declaracao: tipo_especificador error ABRE_PARENTESES . params FECHA_PARENTESES composto_decl
+
+    error   shift, and go to state 25
+    VOID    shift, and go to state 26
+    STRUCT  shift, and go to state 2
+    TIPO    shift, and go to state 3
+
+    tipo_especificador  go to state 27
+    params              go to state 28
+    param_lista         go to state 29
+    param               go to state 30
+
+
+State 18
+
+   10 var_colchete: ABRE_COLCHETE . NUM_INT FECHA_COLCHETE var_colchete
+   11             | ABRE_COLCHETE . NUM_INT FECHA_COLCHETE
+   12             | ABRE_COLCHETE . error FECHA_COLCHETE
+
+    error    shift, and go to state 31
+    NUM_INT  shift, and go to state 32
+
+
+State 19
+
+   18 fun_declaracao: tipo_especificador IDENT ABRE_PARENTESES . params FECHA_PARENTESES composto_decl
+   19               | tipo_especificador IDENT ABRE_PARENTESES . params error composto_decl
+
+    error   shift, and go to state 25
+    VOID    shift, and go to state 26
+    STRUCT  shift, and go to state 2
+    TIPO    shift, and go to state 3
+
+    tipo_especificador  go to state 27
+    params              go to state 33
+    param_lista         go to state 29
+    param               go to state 30
+
+
+State 20
+
+    7 var_declaracao: tipo_especificador IDENT PONTO_VIRGULA .
+
+    $default  reduce using rule 7 (var_declaracao)
+
+
+State 21
+
+    8 var_declaracao: tipo_especificador IDENT var_colchete . PONTO_VIRGULA
+
+    PONTO_VIRGULA  shift, and go to state 34
+
+
+State 22
+
+   15 atributos_declaracao: var_declaracao . fatoracao_atributos_declaracao
+
+    error   shift, and go to state 1
+    STRUCT  shift, and go to state 2
+    TIPO    shift, and go to state 3
+
+    FECHA_CHAVE  reduce using rule 17 (fatoracao_atributos_declaracao)
+
+    var_declaracao                  go to state 22
+    tipo_especificador              go to state 23
+    atributos_declaracao            go to state 35
+    fatoracao_atributos_declaracao  go to state 36
+
+
+State 23
+
+    7 var_declaracao: tipo_especificador . IDENT PONTO_VIRGULA
+    8               | tipo_especificador . IDENT var_colchete PONTO_VIRGULA
+
+    IDENT  shift, and go to state 37
+
+
+State 24
+
+   14 tipo_especificador: STRUCT IDENT ABRE_CHAVE atributos_declaracao . FECHA_CHAVE
+
+    FECHA_CHAVE  shift, and go to state 38
+
+
+State 25
+
+   23 params: error .
+
+    $default  reduce using rule 23 (params)
+
+
+State 26
+
+   22 params: VOID .
+
+    $default  reduce using rule 22 (params)
+
+
+State 27
+
+   27 param: tipo_especificador . IDENT
+   28      | tipo_especificador . IDENT ABRE_COLCHETE FECHA_COLCHETE
+   29      | tipo_especificador . IDENT ABRE_COLCHETE error
+
+    IDENT  shift, and go to state 39
+
+
+State 28
+
+   20 fun_declaracao: tipo_especificador error ABRE_PARENTESES params . FECHA_PARENTESES composto_decl
+
+    FECHA_PARENTESES  shift, and go to state 40
+
+
+State 29
+
+   21 params: param_lista .
+
+    $default  reduce using rule 21 (params)
+
+
+State 30
+
+   24 param_lista: param . fatoracao_params_lista
+
+    VIRGULA  shift, and go to state 41
+
+    $default  reduce using rule 26 (fatoracao_params_lista)
+
+    fatoracao_params_lista  go to state 42
+
+
+State 31
+
+   12 var_colchete: ABRE_COLCHETE error . FECHA_COLCHETE
+
+    FECHA_COLCHETE  shift, and go to state 43
+
+
+State 32
+
+   10 var_colchete: ABRE_COLCHETE NUM_INT . FECHA_COLCHETE var_colchete
+   11             | ABRE_COLCHETE NUM_INT . FECHA_COLCHETE
+
+    FECHA_COLCHETE  shift, and go to state 44
+
+
+State 33
+
+   18 fun_declaracao: tipo_especificador IDENT ABRE_PARENTESES params . FECHA_PARENTESES composto_decl
+   19               | tipo_especificador IDENT ABRE_PARENTESES params . error composto_decl
+
+    error             shift, and go to state 45
+    FECHA_PARENTESES  shift, and go to state 46
+
+
+State 34
+
+    8 var_declaracao: tipo_especificador IDENT var_colchete PONTO_VIRGULA .
+
+    $default  reduce using rule 8 (var_declaracao)
+
+
+State 35
+
+   16 fatoracao_atributos_declaracao: atributos_declaracao .
+
+    $default  reduce using rule 16 (fatoracao_atributos_declaracao)
+
+
+State 36
+
+   15 atributos_declaracao: var_declaracao fatoracao_atributos_declaracao .
+
+    $default  reduce using rule 15 (atributos_declaracao)
+
+
+State 37
+
+    7 var_declaracao: tipo_especificador IDENT . PONTO_VIRGULA
+    8               | tipo_especificador IDENT . var_colchete PONTO_VIRGULA
+
+    ABRE_COLCHETE  shift, and go to state 18
+    PONTO_VIRGULA  shift, and go to state 20
+
+    var_colchete  go to state 21
+
+
+State 38
+
+   14 tipo_especificador: STRUCT IDENT ABRE_CHAVE atributos_declaracao FECHA_CHAVE .
+
+    $default  reduce using rule 14 (tipo_especificador)
+
+
+State 39
+
+   27 param: tipo_especificador IDENT .
+   28      | tipo_especificador IDENT . ABRE_COLCHETE FECHA_COLCHETE
+   29      | tipo_especificador IDENT . ABRE_COLCHETE error
+
+    ABRE_COLCHETE  shift, and go to state 47
+
+    $default  reduce using rule 27 (param)
+
+
+State 40
+
+   20 fun_declaracao: tipo_especificador error ABRE_PARENTESES params FECHA_PARENTESES . composto_decl
+
+    ABRE_CHAVE  shift, and go to state 48
+
+    composto_decl  go to state 49
+
+
+State 41
+
+   25 fatoracao_params_lista: VIRGULA . param_lista
+
+    STRUCT  shift, and go to state 2
+    TIPO    shift, and go to state 3
+
+    tipo_especificador  go to state 27
+    param_lista         go to state 50
+    param               go to state 30
+
+
+State 42
+
+   24 param_lista: param fatoracao_params_lista .
+
+    $default  reduce using rule 24 (param_lista)
+
+
+State 43
+
+   12 var_colchete: ABRE_COLCHETE error FECHA_COLCHETE .
+
+    $default  reduce using rule 12 (var_colchete)
+
+
+State 44
+
+   10 var_colchete: ABRE_COLCHETE NUM_INT FECHA_COLCHETE . var_colchete
+   11             | ABRE_COLCHETE NUM_INT FECHA_COLCHETE .
+
+    ABRE_COLCHETE  shift, and go to state 18
+
+    $default  reduce using rule 11 (var_colchete)
+
+    var_colchete  go to state 51
+
+
+State 45
+
+   19 fun_declaracao: tipo_especificador IDENT ABRE_PARENTESES params error . composto_decl
+
+    ABRE_CHAVE  shift, and go to state 48
+
+    composto_decl  go to state 52
+
+
+State 46
+
+   18 fun_declaracao: tipo_especificador IDENT ABRE_PARENTESES params FECHA_PARENTESES . composto_decl
+
+    ABRE_CHAVE  shift, and go to state 48
+
+    composto_decl  go to state 53
+
+
+State 47
+
+   28 param: tipo_especificador IDENT ABRE_COLCHETE . FECHA_COLCHETE
+   29      | tipo_especificador IDENT ABRE_COLCHETE . error
+
+    error           shift, and go to state 54
+    FECHA_COLCHETE  shift, and go to state 55
+
+
+State 48
+
+   30 composto_decl: ABRE_CHAVE . local_declaracoes comando_lista FECHA_CHAVE
+
+    error   shift, and go to state 1
+    STRUCT  shift, and go to state 2
+    TIPO    shift, and go to state 3
+
+    IF               reduce using rule 32 (local_declaracoes)
+    WHILE            reduce using rule 32 (local_declaracoes)
+    RETURN           reduce using rule 32 (local_declaracoes)
+    NUM_INT          reduce using rule 32 (local_declaracoes)
+    NUM              reduce using rule 32 (local_declaracoes)
+    ABRE_CHAVE       reduce using rule 32 (local_declaracoes)
+    FECHA_CHAVE      reduce using rule 32 (local_declaracoes)
+    ABRE_PARENTESES  reduce using rule 32 (local_declaracoes)
+    IDENT            reduce using rule 32 (local_declaracoes)
+    PONTO_VIRGULA    reduce using rule 32 (local_declaracoes)
+
+    var_declaracao      go to state 56
+    tipo_especificador  go to state 23
+    local_declaracoes   go to state 57
+
+
+State 49
+
+   20 fun_declaracao: tipo_especificador error ABRE_PARENTESES params FECHA_PARENTESES composto_decl .
+
+    $default  reduce using rule 20 (fun_declaracao)
+
+
+State 50
+
+   25 fatoracao_params_lista: VIRGULA param_lista .
+
+    $default  reduce using rule 25 (fatoracao_params_lista)
+
+
+State 51
+
+   10 var_colchete: ABRE_COLCHETE NUM_INT FECHA_COLCHETE var_colchete .
+
+    $default  reduce using rule 10 (var_colchete)
+
+
+State 52
+
+   19 fun_declaracao: tipo_especificador IDENT ABRE_PARENTESES params error composto_decl .
+
+    $default  reduce using rule 19 (fun_declaracao)
+
+
+State 53
+
+   18 fun_declaracao: tipo_especificador IDENT ABRE_PARENTESES params FECHA_PARENTESES composto_decl .
+
+    $default  reduce using rule 18 (fun_declaracao)
+
+
+State 54
+
+   29 param: tipo_especificador IDENT ABRE_COLCHETE error .
+
+    $default  reduce using rule 29 (param)
+
+
+State 55
+
+   28 param: tipo_especificador IDENT ABRE_COLCHETE FECHA_COLCHETE .
+
+    $default  reduce using rule 28 (param)
+
+
+State 56
+
+   31 local_declaracoes: var_declaracao . fatoracao_local_declaracoes
+
+    error   shift, and go to state 1
+    STRUCT  shift, and go to state 2
+    TIPO    shift, and go to state 3
+
+    IF               reduce using rule 32 (local_declaracoes)
+    WHILE            reduce using rule 32 (local_declaracoes)
+    RETURN           reduce using rule 32 (local_declaracoes)
+    NUM_INT          reduce using rule 32 (local_declaracoes)
+    NUM              reduce using rule 32 (local_declaracoes)
+    ABRE_CHAVE       reduce using rule 32 (local_declaracoes)
+    FECHA_CHAVE      reduce using rule 32 (local_declaracoes)
+    ABRE_PARENTESES  reduce using rule 32 (local_declaracoes)
+    IDENT            reduce using rule 32 (local_declaracoes)
+    PONTO_VIRGULA    reduce using rule 32 (local_declaracoes)
+
+    var_declaracao               go to state 56
+    tipo_especificador           go to state 23
+    local_declaracoes            go to state 58
+    fatoracao_local_declaracoes  go to state 59
+
+
+State 57
+
+   30 composto_decl: ABRE_CHAVE local_declaracoes . comando_lista FECHA_CHAVE
+
+    IF               shift, and go to state 60
+    WHILE            shift, and go to state 61
+    RETURN           shift, and go to state 62
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_CHAVE       shift, and go to state 48
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+    PONTO_VIRGULA    shift, and go to state 67
+
+    $default  reduce using rule 35 (comando_lista)
+
+    composto_decl      go to state 68
+    comando_lista      go to state 69
+    comando            go to state 70
+    expressao_decl     go to state 71
+    selecao_decl       go to state 72
+    selecao            go to state 73
+    iteracao_decl      go to state 74
+    retorno_decl       go to state 75
+    expressao          go to state 76
+    var                go to state 77
+    expressao_simples  go to state 78
+    expressao_soma     go to state 79
+    termo              go to state 80
+    fator              go to state 81
+    ativacao           go to state 82
+
+
+State 58
+
+   33 fatoracao_local_declaracoes: local_declaracoes .
+
+    $default  reduce using rule 33 (fatoracao_local_declaracoes)
+
+
+State 59
+
+   31 local_declaracoes: var_declaracao fatoracao_local_declaracoes .
+
+    $default  reduce using rule 31 (local_declaracoes)
+
+
+State 60
+
+   47 selecao: IF . ABRE_PARENTESES expressao FECHA_PARENTESES comando
+
+    ABRE_PARENTESES  shift, and go to state 83
+
+
+State 61
+
+   48 iteracao_decl: WHILE . ABRE_PARENTESES expressao FECHA_PARENTESES comando
+
+    ABRE_PARENTESES  shift, and go to state 84
+
+
+State 62
+
+   49 retorno_decl: RETURN . PONTO_VIRGULA
+   50             | RETURN . expressao PONTO_VIRGULA
+
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+    PONTO_VIRGULA    shift, and go to state 85
+
+    expressao          go to state 86
+    var                go to state 77
+    expressao_simples  go to state 78
+    expressao_soma     go to state 79
+    termo              go to state 80
+    fator              go to state 81
+    ativacao           go to state 82
+
+
+State 63
+
+   73 fator: NUM_INT .
+
+    $default  reduce using rule 73 (fator)
+
+
+State 64
+
+   72 fator: NUM .
+
+    $default  reduce using rule 72 (fator)
+
+
+State 65
+
+   68 fator: ABRE_PARENTESES . expressao FECHA_PARENTESES
+   69      | ABRE_PARENTESES . expressao error
+
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+
+    expressao          go to state 87
+    var                go to state 77
+    expressao_simples  go to state 78
+    expressao_soma     go to state 79
+    termo              go to state 80
+    fator              go to state 81
+    ativacao           go to state 82
+
+
+State 66
+
+   53 var: IDENT .
+   54    | IDENT . colchete_var
+   74 ativacao: IDENT . ABRE_PARENTESES args FECHA_PARENTESES
+   75         | IDENT . ABRE_PARENTESES args error
+
+    ABRE_COLCHETE    shift, and go to state 88
+    ABRE_PARENTESES  shift, and go to state 89
+
+    $default  reduce using rule 53 (var)
+
+    colchete_var  go to state 90
+
+
+State 67
+
+   43 expressao_decl: PONTO_VIRGULA .
+
+    $default  reduce using rule 43 (expressao_decl)
+
+
+State 68
+
+   41 comando: composto_decl .
+
+    $default  reduce using rule 41 (comando)
+
+
+State 69
+
+   30 composto_decl: ABRE_CHAVE local_declaracoes comando_lista . FECHA_CHAVE
+
+    FECHA_CHAVE  shift, and go to state 91
+
+
+State 70
+
+   34 comando_lista: comando . fatoracao_comando_lista
+
+    IF               shift, and go to state 60
+    WHILE            shift, and go to state 61
+    RETURN           shift, and go to state 62
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_CHAVE       shift, and go to state 48
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+    PONTO_VIRGULA    shift, and go to state 67
+
+    $default  reduce using rule 35 (comando_lista)
+
+    composto_decl            go to state 68
+    comando_lista            go to state 92
+    fatoracao_comando_lista  go to state 93
+    comando                  go to state 70
+    expressao_decl           go to state 71
+    selecao_decl             go to state 72
+    selecao                  go to state 73
+    iteracao_decl            go to state 74
+    retorno_decl             go to state 75
+    expressao                go to state 76
+    var                      go to state 77
+    expressao_simples        go to state 78
+    expressao_soma           go to state 79
+    termo                    go to state 80
+    fator                    go to state 81
+    ativacao                 go to state 82
+
+
+State 71
+
+   40 comando: expressao_decl .
+
+    $default  reduce using rule 40 (comando)
+
+
+State 72
+
+   37 comando: selecao_decl .
+
+    $default  reduce using rule 37 (comando)
+
+
+State 73
+
+   44 selecao_decl: selecao . fatoracao_selecao_decl
+
+    ELSE  shift, and go to state 94
+
+    $default  reduce using rule 45 (fatoracao_selecao_decl)
+
+    fatoracao_selecao_decl  go to state 95
+
+
+State 74
+
+   38 comando: iteracao_decl .
+
+    $default  reduce using rule 38 (comando)
+
+
+State 75
+
+   39 comando: retorno_decl .
+
+    $default  reduce using rule 39 (comando)
+
+
+State 76
+
+   42 expressao_decl: expressao . PONTO_VIRGULA
+
+    PONTO_VIRGULA  shift, and go to state 96
+
+
+State 77
+
+   51 expressao: var . ATRIBUICAO expressao
+   70 fator: var .
+
+    ATRIBUICAO  shift, and go to state 97
+
+    $default  reduce using rule 70 (fator)
+
+
+State 78
+
+   52 expressao: expressao_simples .
+
+    $default  reduce using rule 52 (expressao)
+
+
+State 79
+
+   57 expressao_simples: expressao_soma . relacional expressao_soma
+   58                  | expressao_soma .
+
+    RELACIONAL  shift, and go to state 98
+
+    $default  reduce using rule 58 (expressao_simples)
+
+    relacional  go to state 99
+
+
+State 80
+
+   60 expressao_soma: termo . soma expressao_soma
+   61               | termo .
+
+    SOMA  shift, and go to state 100
+    SUB   shift, and go to state 101
+
+    $default  reduce using rule 61 (expressao_soma)
+
+    soma  go to state 102
+
+
+State 81
+
+   64 termo: fator . mult termo
+   65      | fator .
+
+    MULT  shift, and go to state 103
+    DIV   shift, and go to state 104
+
+    $default  reduce using rule 65 (termo)
+
+    mult  go to state 105
+
+
+State 82
+
+   71 fator: ativacao .
+
+    $default  reduce using rule 71 (fator)
+
+
+State 83
+
+   47 selecao: IF ABRE_PARENTESES . expressao FECHA_PARENTESES comando
+
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+
+    expressao          go to state 106
+    var                go to state 77
+    expressao_simples  go to state 78
+    expressao_soma     go to state 79
+    termo              go to state 80
+    fator              go to state 81
+    ativacao           go to state 82
+
+
+State 84
+
+   48 iteracao_decl: WHILE ABRE_PARENTESES . expressao FECHA_PARENTESES comando
+
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+
+    expressao          go to state 107
+    var                go to state 77
+    expressao_simples  go to state 78
+    expressao_soma     go to state 79
+    termo              go to state 80
+    fator              go to state 81
+    ativacao           go to state 82
+
+
+State 85
+
+   49 retorno_decl: RETURN PONTO_VIRGULA .
+
+    $default  reduce using rule 49 (retorno_decl)
+
+
+State 86
+
+   50 retorno_decl: RETURN expressao . PONTO_VIRGULA
+
+    PONTO_VIRGULA  shift, and go to state 108
+
+
+State 87
+
+   68 fator: ABRE_PARENTESES expressao . FECHA_PARENTESES
+   69      | ABRE_PARENTESES expressao . error
+
+    error             shift, and go to state 109
+    FECHA_PARENTESES  shift, and go to state 110
+
+
+State 88
+
+   55 colchete_var: ABRE_COLCHETE . expressao FECHA_COLCHETE colchete_var
+   56             | ABRE_COLCHETE . expressao FECHA_COLCHETE
+
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+
+    expressao          go to state 111
+    var                go to state 77
+    expressao_simples  go to state 78
+    expressao_soma     go to state 79
+    termo              go to state 80
+    fator              go to state 81
+    ativacao           go to state 82
+
+
+State 89
+
+   74 ativacao: IDENT ABRE_PARENTESES . args FECHA_PARENTESES
+   75         | IDENT ABRE_PARENTESES . args error
+
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+
+    $default  reduce using rule 77 (args)
+
+    expressao          go to state 112
+    var                go to state 77
+    expressao_simples  go to state 78
+    expressao_soma     go to state 79
+    termo              go to state 80
+    fator              go to state 81
+    ativacao           go to state 82
+    args               go to state 113
+    arg_lista          go to state 114
+
+
+State 90
+
+   54 var: IDENT colchete_var .
+
+    $default  reduce using rule 54 (var)
+
+
+State 91
+
+   30 composto_decl: ABRE_CHAVE local_declaracoes comando_lista FECHA_CHAVE .
+
+    $default  reduce using rule 30 (composto_decl)
+
+
+State 92
+
+   36 fatoracao_comando_lista: comando_lista .
+
+    $default  reduce using rule 36 (fatoracao_comando_lista)
+
+
+State 93
+
+   34 comando_lista: comando fatoracao_comando_lista .
+
+    $default  reduce using rule 34 (comando_lista)
+
+
+State 94
+
+   46 fatoracao_selecao_decl: ELSE . comando
+
+    IF               shift, and go to state 60
+    WHILE            shift, and go to state 61
+    RETURN           shift, and go to state 62
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_CHAVE       shift, and go to state 48
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+    PONTO_VIRGULA    shift, and go to state 67
+
+    composto_decl      go to state 68
+    comando            go to state 115
+    expressao_decl     go to state 71
+    selecao_decl       go to state 72
+    selecao            go to state 73
+    iteracao_decl      go to state 74
+    retorno_decl       go to state 75
+    expressao          go to state 76
+    var                go to state 77
+    expressao_simples  go to state 78
+    expressao_soma     go to state 79
+    termo              go to state 80
+    fator              go to state 81
+    ativacao           go to state 82
+
+
+State 95
+
+   44 selecao_decl: selecao fatoracao_selecao_decl .
+
+    $default  reduce using rule 44 (selecao_decl)
+
+
+State 96
+
+   42 expressao_decl: expressao PONTO_VIRGULA .
+
+    $default  reduce using rule 42 (expressao_decl)
+
+
+State 97
+
+   51 expressao: var ATRIBUICAO . expressao
+
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+
+    expressao          go to state 116
+    var                go to state 77
+    expressao_simples  go to state 78
+    expressao_soma     go to state 79
+    termo              go to state 80
+    fator              go to state 81
+    ativacao           go to state 82
+
+
+State 98
+
+   59 relacional: RELACIONAL .
+
+    $default  reduce using rule 59 (relacional)
+
+
+State 99
+
+   57 expressao_simples: expressao_soma relacional . expressao_soma
+
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+
+    var             go to state 117
+    expressao_soma  go to state 118
+    termo           go to state 80
+    fator           go to state 81
+    ativacao        go to state 82
+
+
+State 100
+
+   62 soma: SOMA .
+
+    $default  reduce using rule 62 (soma)
+
+
+State 101
+
+   63 soma: SUB .
+
+    $default  reduce using rule 63 (soma)
+
+
+State 102
+
+   60 expressao_soma: termo soma . expressao_soma
+
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+
+    var             go to state 117
+    expressao_soma  go to state 119
+    termo           go to state 80
+    fator           go to state 81
+    ativacao        go to state 82
+
+
+State 103
+
+   66 mult: MULT .
+
+    $default  reduce using rule 66 (mult)
+
+
+State 104
+
+   67 mult: DIV .
+
+    $default  reduce using rule 67 (mult)
+
+
+State 105
+
+   64 termo: fator mult . termo
+
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+
+    var       go to state 117
+    termo     go to state 120
+    fator     go to state 81
+    ativacao  go to state 82
+
+
+State 106
+
+   47 selecao: IF ABRE_PARENTESES expressao . FECHA_PARENTESES comando
+
+    FECHA_PARENTESES  shift, and go to state 121
+
+
+State 107
+
+   48 iteracao_decl: WHILE ABRE_PARENTESES expressao . FECHA_PARENTESES comando
+
+    FECHA_PARENTESES  shift, and go to state 122
+
+
+State 108
+
+   50 retorno_decl: RETURN expressao PONTO_VIRGULA .
+
+    $default  reduce using rule 50 (retorno_decl)
+
+
+State 109
+
+   69 fator: ABRE_PARENTESES expressao error .
+
+    $default  reduce using rule 69 (fator)
+
+
+State 110
+
+   68 fator: ABRE_PARENTESES expressao FECHA_PARENTESES .
+
+    $default  reduce using rule 68 (fator)
+
+
+State 111
+
+   55 colchete_var: ABRE_COLCHETE expressao . FECHA_COLCHETE colchete_var
+   56             | ABRE_COLCHETE expressao . FECHA_COLCHETE
+
+    FECHA_COLCHETE  shift, and go to state 123
+
+
+State 112
+
+   78 arg_lista: expressao . fatoracao_arg_lista
+
+    VIRGULA  shift, and go to state 124
+
+    $default  reduce using rule 80 (fatoracao_arg_lista)
+
+    fatoracao_arg_lista  go to state 125
+
+
+State 113
+
+   74 ativacao: IDENT ABRE_PARENTESES args . FECHA_PARENTESES
+   75         | IDENT ABRE_PARENTESES args . error
+
+    error             shift, and go to state 126
+    FECHA_PARENTESES  shift, and go to state 127
+
+
+State 114
+
+   76 args: arg_lista .
+
+    $default  reduce using rule 76 (args)
+
+
+State 115
+
+   46 fatoracao_selecao_decl: ELSE comando .
+
+    $default  reduce using rule 46 (fatoracao_selecao_decl)
+
+
+State 116
+
+   51 expressao: var ATRIBUICAO expressao .
+
+    $default  reduce using rule 51 (expressao)
+
+
+State 117
+
+   70 fator: var .
+
+    $default  reduce using rule 70 (fator)
+
+
+State 118
+
+   57 expressao_simples: expressao_soma relacional expressao_soma .
+
+    $default  reduce using rule 57 (expressao_simples)
+
+
+State 119
+
+   60 expressao_soma: termo soma expressao_soma .
+
+    $default  reduce using rule 60 (expressao_soma)
+
+
+State 120
+
+   64 termo: fator mult termo .
+
+    $default  reduce using rule 64 (termo)
+
+
+State 121
+
+   47 selecao: IF ABRE_PARENTESES expressao FECHA_PARENTESES . comando
+
+    IF               shift, and go to state 60
+    WHILE            shift, and go to state 61
+    RETURN           shift, and go to state 62
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_CHAVE       shift, and go to state 48
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+    PONTO_VIRGULA    shift, and go to state 67
+
+    composto_decl      go to state 68
+    comando            go to state 128
+    expressao_decl     go to state 71
+    selecao_decl       go to state 72
+    selecao            go to state 73
+    iteracao_decl      go to state 74
+    retorno_decl       go to state 75
+    expressao          go to state 76
+    var                go to state 77
+    expressao_simples  go to state 78
+    expressao_soma     go to state 79
+    termo              go to state 80
+    fator              go to state 81
+    ativacao           go to state 82
+
+
+State 122
+
+   48 iteracao_decl: WHILE ABRE_PARENTESES expressao FECHA_PARENTESES . comando
+
+    IF               shift, and go to state 60
+    WHILE            shift, and go to state 61
+    RETURN           shift, and go to state 62
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_CHAVE       shift, and go to state 48
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+    PONTO_VIRGULA    shift, and go to state 67
+
+    composto_decl      go to state 68
+    comando            go to state 129
+    expressao_decl     go to state 71
+    selecao_decl       go to state 72
+    selecao            go to state 73
+    iteracao_decl      go to state 74
+    retorno_decl       go to state 75
+    expressao          go to state 76
+    var                go to state 77
+    expressao_simples  go to state 78
+    expressao_soma     go to state 79
+    termo              go to state 80
+    fator              go to state 81
+    ativacao           go to state 82
+
+
+State 123
+
+   55 colchete_var: ABRE_COLCHETE expressao FECHA_COLCHETE . colchete_var
+   56             | ABRE_COLCHETE expressao FECHA_COLCHETE .
+
+    ABRE_COLCHETE  shift, and go to state 88
+
+    $default  reduce using rule 56 (colchete_var)
+
+    colchete_var  go to state 130
+
+
+State 124
+
+   79 fatoracao_arg_lista: VIRGULA . arg_lista
+
+    NUM_INT          shift, and go to state 63
+    NUM              shift, and go to state 64
+    ABRE_PARENTESES  shift, and go to state 65
+    IDENT            shift, and go to state 66
+
+    expressao          go to state 112
+    var                go to state 77
+    expressao_simples  go to state 78
+    expressao_soma     go to state 79
+    termo              go to state 80
+    fator              go to state 81
+    ativacao           go to state 82
+    arg_lista          go to state 131
+
+
+State 125
+
+   78 arg_lista: expressao fatoracao_arg_lista .
+
+    $default  reduce using rule 78 (arg_lista)
+
+
+State 126
+
+   75 ativacao: IDENT ABRE_PARENTESES args error .
+
+    $default  reduce using rule 75 (ativacao)
+
+
+State 127
+
+   74 ativacao: IDENT ABRE_PARENTESES args FECHA_PARENTESES .
+
+    $default  reduce using rule 74 (ativacao)
+
+
+State 128
+
+   47 selecao: IF ABRE_PARENTESES expressao FECHA_PARENTESES comando .
+
+    $default  reduce using rule 47 (selecao)
+
+
+State 129
+
+   48 iteracao_decl: WHILE ABRE_PARENTESES expressao FECHA_PARENTESES comando .
+
+    $default  reduce using rule 48 (iteracao_decl)
+
+
+State 130
+
+   55 colchete_var: ABRE_COLCHETE expressao FECHA_COLCHETE colchete_var .
+
+    $default  reduce using rule 55 (colchete_var)
+
+
+State 131
+
+   79 fatoracao_arg_lista: VIRGULA arg_lista .
+
+    $default  reduce using rule 79 (fatoracao_arg_lista)

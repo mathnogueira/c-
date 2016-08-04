@@ -4,6 +4,8 @@
 	#include <lexico/funcoes.h>
 	#include <sintatico/erro.h>
 
+	#define YYSTYPE char*
+
 	int yylex();
 	void yyerror (const char *msg);
 	extern FILE *yyin, *yyout;
@@ -33,6 +35,16 @@
 
 %locations
 
+%union {
+	char* lexema;
+	double valor_double;
+	int valor_int;
+}
+
+%type <lexema> tipo_especificador
+%type <valor_double> IDENT
+%type <lexema> var_declaracao
+
 %%
 
 /* Ponto inicial da gramatica */
@@ -58,7 +70,9 @@ declaracao:
 
 /* Declaracao de variavel (unitaria ou vetor) */
 var_declaracao:
-	tipo_especificador IDENT PONTO_VIRGULA
+	tipo_especificador IDENT PONTO_VIRGULA		{
+													printf("TIPO: %s | IDENT: %s;\n", $1, $2);
+												}
 	| tipo_especificador IDENT var_colchete PONTO_VIRGULA
 	| error		{ errno = NO_SEMICOLON; yyclearin;}
 	;
@@ -278,13 +292,6 @@ int main(int argc, char *argv[]) {
 
 void yyerror (const char *msg) {
 	char* message = (char*) msg;
-	/*printf("%s na linha %d, coluna %d\n", msg, yylloc.first_line, yylloc.first_column);*/
-	/*if (errno == NO_RBRACE)
-		message = "Missing }";
-	else if (errno == NO_RPARENTHESIS)
-		message = "Missing )";
-	else if (errno == NO_SEMICOLON)
-		message = "Missing ;";*/
 	if (strcmp(msg, "syntax error, unexpected IDENT, expecting ABRE_COLCHETE or PONTO_VIRGULA") == 0) {
 		message = "Você esqueceu de colocar ; ou []";
 	} else if (strcmp(msg, "syntax error, unexpected IDENT, expecting PONTO_VIRGULA") == 0) {

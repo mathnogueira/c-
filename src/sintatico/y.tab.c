@@ -69,6 +69,8 @@
 	#include <lexico/funcoes.h>
 	#include <sintatico/erro.h>
 
+	#define YYSTYPE char*
+
 	int yylex();
 	void yyerror (const char *msg);
 	extern FILE *yyin, *yyout;
@@ -77,7 +79,7 @@
 	extern unsigned char pulou_linha;
 	/*int yydebug = 1;*/
 
-#line 81 "y.tab.c" /* yacc.c:339  */
+#line 83 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -196,7 +198,19 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+
+union YYSTYPE
+{
+#line 38 "comp/sintatico/analise.y" /* yacc.c:355  */
+
+	char* lexema;
+	double valor_double;
+	int valor_int;
+
+#line 211 "y.tab.c" /* yacc.c:355  */
+};
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -224,7 +238,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 228 "y.tab.c" /* yacc.c:358  */
+#line 242 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -527,15 +541,15 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    40,    40,    45,    49,    50,    55,    56,    61,    62,
-      63,    68,    69,    70,    75,    76,    81,    85,    86,    91,
-      92,    93,    98,    99,   100,   105,   109,   110,   115,   116,
-     117,   122,   127,   128,   132,   137,   138,   142,   147,   148,
-     149,   150,   151,   156,   157,   162,   166,   167,   171,   175,
-     180,   181,   186,   187,   192,   193,   198,   199,   204,   205,
-     210,   215,   216,   221,   222,   227,   228,   233,   234,   239,
-     240,   241,   242,   243,   244,   248,   249,   252,   253,   257,
-     261,   262
+       0,    52,    52,    57,    61,    62,    67,    68,    73,    76,
+      77,    82,    83,    84,    89,    90,    95,    99,   100,   105,
+     106,   107,   112,   113,   114,   119,   123,   124,   129,   130,
+     131,   136,   141,   142,   146,   151,   152,   156,   161,   162,
+     163,   164,   165,   170,   171,   176,   180,   181,   185,   189,
+     194,   195,   200,   201,   206,   207,   212,   213,   218,   219,
+     224,   229,   230,   235,   236,   241,   242,   247,   248,   253,
+     254,   255,   256,   257,   258,   262,   263,   266,   267,   271,
+     275,   276
 };
 #endif
 
@@ -1504,44 +1518,52 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 10:
-#line 63 "comp/sintatico/analise.y" /* yacc.c:1646  */
+        case 8:
+#line 73 "comp/sintatico/analise.y" /* yacc.c:1646  */
+    {
+													printf("TIPO: %s | IDENT: %s;\n", (yyvsp[-2].lexema), (yyvsp[-1].valor_double));
+												}
+#line 1527 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 10:
+#line 77 "comp/sintatico/analise.y" /* yacc.c:1646  */
     { errno = NO_SEMICOLON; yyclearin;}
-#line 1511 "y.tab.c" /* yacc.c:1646  */
+#line 1533 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 70 "comp/sintatico/analise.y" /* yacc.c:1646  */
+#line 84 "comp/sintatico/analise.y" /* yacc.c:1646  */
     {}
-#line 1517 "y.tab.c" /* yacc.c:1646  */
+#line 1539 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 92 "comp/sintatico/analise.y" /* yacc.c:1646  */
+#line 106 "comp/sintatico/analise.y" /* yacc.c:1646  */
     {}
-#line 1523 "y.tab.c" /* yacc.c:1646  */
+#line 1545 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 93 "comp/sintatico/analise.y" /* yacc.c:1646  */
+#line 107 "comp/sintatico/analise.y" /* yacc.c:1646  */
     {}
-#line 1529 "y.tab.c" /* yacc.c:1646  */
+#line 1551 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 117 "comp/sintatico/analise.y" /* yacc.c:1646  */
+#line 131 "comp/sintatico/analise.y" /* yacc.c:1646  */
     {}
-#line 1535 "y.tab.c" /* yacc.c:1646  */
+#line 1557 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 249 "comp/sintatico/analise.y" /* yacc.c:1646  */
+#line 263 "comp/sintatico/analise.y" /* yacc.c:1646  */
     { errno = NO_RPARENTHESIS; yyerrok; yyclearin; }
-#line 1541 "y.tab.c" /* yacc.c:1646  */
+#line 1563 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1545 "y.tab.c" /* yacc.c:1646  */
+#line 1567 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1776,7 +1798,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 265 "comp/sintatico/analise.y" /* yacc.c:1906  */
+#line 279 "comp/sintatico/analise.y" /* yacc.c:1906  */
 
 
 int main(int argc, char *argv[]) {
@@ -1793,13 +1815,6 @@ int main(int argc, char *argv[]) {
 
 void yyerror (const char *msg) {
 	char* message = (char*) msg;
-	/*printf("%s na linha %d, coluna %d\n", msg, yylloc.first_line, yylloc.first_column);*/
-	/*if (errno == NO_RBRACE)
-		message = "Missing }";
-	else if (errno == NO_RPARENTHESIS)
-		message = "Missing )";
-	else if (errno == NO_SEMICOLON)
-		message = "Missing ;";*/
 	if (strcmp(msg, "syntax error, unexpected IDENT, expecting ABRE_COLCHETE or PONTO_VIRGULA") == 0) {
 		message = "Você esqueceu de colocar ; ou []";
 	} else if (strcmp(msg, "syntax error, unexpected IDENT, expecting PONTO_VIRGULA") == 0) {

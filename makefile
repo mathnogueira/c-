@@ -30,7 +30,7 @@ DEBUG   = -ggdb -O0
 RELEASE = -O2
 INCLUDE = -Iinclude -I /usr/include
 LIBS 	=
-CFLAGS  = -lm -c $(DEBUG) $(INCLUDE)
+CFLAGS  = -lm -c $(DEBUG) $(INCLUDE) -Wall
 OFLAGS  = -lm -msse2 -ffast-math -ftree-vectorize
 LDFLAGS =
 

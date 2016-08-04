@@ -915,175 +915,316 @@ case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
 #line 103 "comp/lexico/analise.lex"
-{ linha++; yycolumn = 1; pulou_linha = 1; }
+{
+								linha++;
+								yycolumn = 1;
+								pulou_linha = 1;
+							}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 104 "comp/lexico/analise.lex"
-{ coluna += yyleng; }
+#line 108 "comp/lexico/analise.lex"
+{
+	 							coluna += yyleng;
+						 	}
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 105 "comp/lexico/analise.lex"
-{ ignorar_comentario(yytext, yyleng); pulou_linha = 0; }
+#line 111 "comp/lexico/analise.lex"
+{
+								ignorar_comentario(yytext, yyleng);
+								pulou_linha = 0;
+							}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 106 "comp/lexico/analise.lex"
-{ DEBUG("<TIPO, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; pulou_linha = 0; return VOID; }
+#line 115 "comp/lexico/analise.lex"
+{
+								DEBUG("<TIPO, %s>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								pulou_linha = 0;
+    							return VOID;
+ 							}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 107 "comp/lexico/analise.lex"
-{ DEBUG("<TIPO, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return TIPO; }
+#line 122 "comp/lexico/analise.lex"
+{
+								DEBUG("<TIPO, %s>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+								yylval.lexema = yytext;
+   								return TIPO;
+ 							}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 108 "comp/lexico/analise.lex"
-{ DEBUG("<IF>\n", yytext); coluna += yyleng; pulou_linha = 0; return IF; }
+#line 129 "comp/lexico/analise.lex"
+{
+								DEBUG("<IF>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return IF;
+ 							}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 109 "comp/lexico/analise.lex"
-{ DEBUG("<WHILE>\n", yytext); coluna += yyleng; pulou_linha = 0; return WHILE; }
+#line 135 "comp/lexico/analise.lex"
+{
+								DEBUG("<WHILE>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return WHILE;
+ 							}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 110 "comp/lexico/analise.lex"
-{ DEBUG("<ELSE>\n", yytext); coluna += yyleng; pulou_linha = 0; return ELSE; }
+#line 141 "comp/lexico/analise.lex"
+{
+								DEBUG("<ELSE>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return ELSE;
+ 							}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 111 "comp/lexico/analise.lex"
-{ DEBUG("<RETURN>\n", yytext); coluna += yyleng; pulou_linha = 0; return RETURN; }
+#line 147 "comp/lexico/analise.lex"
+{
+								DEBUG("<RETURN>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return RETURN;
+ 							}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 112 "comp/lexico/analise.lex"
-{ DEBUG("<IDENT, %s, %d>\n", yytext, adicionar_token(yytext)); coluna += yyleng; pulou_linha = 0; return IDENT; }
+#line 153 "comp/lexico/analise.lex"
+{
+								DEBUG("<IDENT, %s, %d>\n", yytext, adicionar_token(yytext));
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+								yylval.lexema = yytext;
+   								return IDENT;
+ 							}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 113 "comp/lexico/analise.lex"
-{ DEBUG("<RELOP, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return RELACIONAL; }
+#line 160 "comp/lexico/analise.lex"
+{
+								DEBUG("<RELOP, %s>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return RELACIONAL;
+ 							}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 114 "comp/lexico/analise.lex"
-{ DEBUG("<ATRIBUICAO, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return ATRIBUICAO; }
+#line 166 "comp/lexico/analise.lex"
+{
+								DEBUG("<ATRIBUICAO, %s>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return ATRIBUICAO;
+ 							}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 115 "comp/lexico/analise.lex"
-{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return SOMA; }
+#line 172 "comp/lexico/analise.lex"
+{
+								DEBUG("<SOMA, %s>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return SOMA;
+ 							}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 116 "comp/lexico/analise.lex"
-{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return SUB; }
+#line 178 "comp/lexico/analise.lex"
+{
+								DEBUG("<SOMA, %s>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return SUB;
+ 							}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 117 "comp/lexico/analise.lex"
-{ DEBUG("<MULT, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return MULT; }
+#line 184 "comp/lexico/analise.lex"
+{
+								DEBUG("<MULT, %s>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return MULT;
+ 							}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 118 "comp/lexico/analise.lex"
-{ DEBUG("<SOMA, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return DIV; }
+#line 190 "comp/lexico/analise.lex"
+{
+								DEBUG("<SOMA, %s>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return DIV;
+ 							}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 119 "comp/lexico/analise.lex"
-{ DEBUG("<NUM_INT, %d>\n", atoi(yytext)); coluna += yyleng; pulou_linha = 0; return NUM_INT; }
+#line 196 "comp/lexico/analise.lex"
+{
+								DEBUG("<NUM_INT, %d>\n", atoi(yytext));
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return NUM_INT;
+ 							}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 120 "comp/lexico/analise.lex"
-{ DEBUG("<NUM, %f>\n", atof(yytext)); coluna += yyleng; pulou_linha = 0; return NUM; }
+#line 202 "comp/lexico/analise.lex"
+{
+								DEBUG("<NUM, %f>\n", atof(yytext));
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return NUM;
+ 							}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 121 "comp/lexico/analise.lex"
-{ DEBUG("<PONTO_VIRGULA, %s>\n", yytext); coluna += yyleng; pulou_linha = 0; return PONTO_VIRGULA; }
+#line 208 "comp/lexico/analise.lex"
+{
+								DEBUG("<PONTO_VIRGULA, %s>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return PONTO_VIRGULA;
+ 							}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 122 "comp/lexico/analise.lex"
-{ DEBUG("<ABRE_CHAVE>\n", yytext); coluna += yyleng; pulou_linha = 0; return ABRE_CHAVE; }
+#line 214 "comp/lexico/analise.lex"
+{
+								DEBUG("<ABRE_CHAVE>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return ABRE_CHAVE;
+ 							}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 123 "comp/lexico/analise.lex"
-{ DEBUG("<FECHA_CHAVE>\n", yytext); coluna += yyleng; pulou_linha = 0; return FECHA_CHAVE; }
+#line 220 "comp/lexico/analise.lex"
+{
+								DEBUG("<FECHA_CHAVE>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return FECHA_CHAVE;
+ 							}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 124 "comp/lexico/analise.lex"
-{ DEBUG("<ABRE_PARENTESES>\n", yytext); coluna += yyleng; pulou_linha = 0; return ABRE_PARENTESES; }
+#line 226 "comp/lexico/analise.lex"
+{
+								DEBUG("<ABRE_PARENTESES>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return ABRE_PARENTESES;
+ 							}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 125 "comp/lexico/analise.lex"
-{ DEBUG("<FECHA_PARENTESES>\n", yytext); coluna += yyleng; pulou_linha = 0; return FECHA_PARENTESES; }
+#line 232 "comp/lexico/analise.lex"
+{
+								DEBUG("<FECHA_PARENTESES>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return FECHA_PARENTESES;
+ 							}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 126 "comp/lexico/analise.lex"
-{ DEBUG("<ABRE_COLCHETE>\n", yytext); coluna += yyleng; pulou_linha = 0; return ABRE_COLCHETE; }
+#line 238 "comp/lexico/analise.lex"
+{
+								DEBUG("<ABRE_COLCHETE>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return ABRE_COLCHETE;
+ 							}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 127 "comp/lexico/analise.lex"
-{ DEBUG("<FECHA_COLCHETE>\n", yytext); coluna += yyleng; pulou_linha = 0; return FECHA_COLCHETE; }
+#line 244 "comp/lexico/analise.lex"
+{
+								DEBUG("<FECHA_COLCHETE>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return FECHA_COLCHETE;
+ 							}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 128 "comp/lexico/analise.lex"
-{ DEBUG("<VIRGULA>\n", yytext); coluna += yyleng; pulou_linha = 0; return VIRGULA; }
+#line 250 "comp/lexico/analise.lex"
+{
+								DEBUG("<VIRGULA>\n", yytext);
+ 								coluna += yyleng;
+  								pulou_linha = 0;
+   								return VIRGULA;
+ 							}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 129 "comp/lexico/analise.lex"
-{ ERRO("Numero definido em um tipo numerico que nao pertence a linguagem: %s\n", yytext);}
+#line 256 "comp/lexico/analise.lex"
+{
+								ERRO("Numero definido em um tipo numerico que nao pertence a linguagem: %s\n", yytext);
+							}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 130 "comp/lexico/analise.lex"
-{ ERRO("Variaveis nao podem conter letras maiusculas.\n"); }
+#line 259 "comp/lexico/analise.lex"
+{
+								ERRO("Variaveis nao podem conter letras maiusculas.\n");
+ 							}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 131 "comp/lexico/analise.lex"
-{ ERRO("Variaveis devem comecar com uma letra.\n");}
+#line 262 "comp/lexico/analise.lex"
+{
+								ERRO("Variaveis devem comecar com uma letra.\n");
+							}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 132 "comp/lexico/analise.lex"
-{ ERRO("Caracter invalido: %s\n", yytext); }
+#line 265 "comp/lexico/analise.lex"
+{
+								ERRO("Caracter invalido: %s\n", yytext);
+ 							}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 133 "comp/lexico/analise.lex"
-{ ERRO("Numero real invalido: %s\n", yytext);}
+#line 268 "comp/lexico/analise.lex"
+{
+								ERRO("Numero real invalido: %s\n", yytext);
+							}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 134 "comp/lexico/analise.lex"
-{ ERRO("Token invalido: %s\n", yytext);}
+#line 271 "comp/lexico/analise.lex"
+{
+								ERRO("Token invalido: %s\n", yytext);
+							}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 135 "comp/lexico/analise.lex"
-{ ERRO("Erro no lexema %s\n", yytext);}
+#line 274 "comp/lexico/analise.lex"
+{
+								ERRO("Erro no lexema %s\n", yytext);
+							}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 137 "comp/lexico/analise.lex"
+#line 278 "comp/lexico/analise.lex"
 ECHO;
 	YY_BREAK
-#line 1087 "lex.yy.c"
+#line 1228 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2096,7 +2237,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 137 "comp/lexico/analise.lex"
+#line 278 "comp/lexico/analise.lex"
 
 
 

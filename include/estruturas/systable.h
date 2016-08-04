@@ -4,13 +4,15 @@
 #include <util/lista.h>
 
 struct SysTable {
-	struct lista_encadeada* topo;
+	struct lista_encadeada *topo;
 	unsigned int ultimoId;
 };
 
 struct SysTableNode {
 	unsigned int id;
-	char* lexema;
+	char *lexema;
+	char *type;
+	unsigned int scopeId;
 };
 
 /**
